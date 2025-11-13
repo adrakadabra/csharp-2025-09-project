@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthService", "AuthService", "{A448CD97-D983-4258-B79D-45791A58CA19}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{BA7A470E-A871-45A7-9F44-7FCB907C107F}"
@@ -13,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Purrrrgrammer", "Purrrrgram
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Api", "AuthService\AuthService.Api\AuthService.Api.csproj", "{6E105776-E0E9-48B5-A451-9900A10B13E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageService", "StorageService\StorageService.csproj", "{3AB2FD02-3B37-4306-B9E0-E46104BAED48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +28,13 @@ Global
 		{6E105776-E0E9-48B5-A451-9900A10B13E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E105776-E0E9-48B5-A451-9900A10B13E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E105776-E0E9-48B5-A451-9900A10B13E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AB2FD02-3B37-4306-B9E0-E46104BAED48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AB2FD02-3B37-4306-B9E0-E46104BAED48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AB2FD02-3B37-4306-B9E0-E46104BAED48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AB2FD02-3B37-4306-B9E0-E46104BAED48}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{30ED240D-AC2F-46DA-9A03-DC8DA6EEBAB2} = {D205BDAA-A4F9-45CA-94D0-62F23C70B570}
