@@ -1,0 +1,44 @@
+﻿@page "/login"
+@using FrontService.Services.Auth
+@using FrontService.Services.Auth.FrontService.Services.Auth
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IAuthService AuthService
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider Auth
+
+<h3>Вход</h3>
+
+<label>Логин:</label>
+<input @bind="username" />
+
+<label>Пароль:</label>
+<input type="password" @bind="password" />
+
+<button @onclick="DoLogin">Войти</button>
+
+@code {
+    string username = "";
+    string password = "";
+
+    private async Task DoLogin()
+    {
+        var result = await AuthService.Login(username, password);
+
+        if (!result.ok)
+        {
+            Console.WriteLine("Неверные данные");
+            return;
+        }
+
+        await ((CustomAuthStateProvider)Auth).SetAuth(result.token, result.role);
+
+        if (result.role?.ToLower() == "admin")
+            Nav.NavigateTo("/admin", true);
+        
+        else if (result.role?.ToLower() == "picker" || result.role?.ToLower() == "collector")
+            Nav.NavigateTo("/orders", true);
+        
+        else
+            Nav.NavigateTo("/test", true);  
+    }
+}
