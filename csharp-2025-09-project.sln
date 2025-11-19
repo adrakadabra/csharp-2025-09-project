@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthService", "AuthService", "{A448CD97-D983-4258-B79D-45791A58CA19}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{BA7A470E-A871-45A7-9F44-7FCB907C107F}"
@@ -11,11 +14,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{D205BD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Purrrrgrammer", "Purrrrgrammer", "{30ED240D-AC2F-46DA-9A03-DC8DA6EEBAB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Api", "AuthService\AuthService.Api\AuthService.Api.csproj", "{6E105776-E0E9-48B5-A451-9900A10B13E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthService.Api", "AuthService\AuthService.Api\AuthService.Api.csproj", "{6E105776-E0E9-48B5-A451-9900A10B13E8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderPickingService", "OrderPickingService", "{7999A122-79B5-4152-ACA7-7D84B0F42E88}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StorageService", "StorageService", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Api", "OrderPickingService.Api\OrderPickingService.Api.csproj", "{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StorageService.Api", "StorageService\StorageService.Api\StorageService.Api.csproj", "{BF660B9C-0052-C4C7-9C6D-0E8AB59DD79E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StorageService.Tests.Integration", "StorageService\StorageService.Tests.Integration\StorageService.Tests.Integration.csproj", "{FE45AEA3-D613-4FC9-A995-1F6D7C122708}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StorageService.Tests.Unit", "StorageService\StorageService.Tests.Unit\StorageService.Tests.Unit.csproj", "{81059195-E589-4CCA-73B3-11ACB651970E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontService", "FrontService", "{00DCA065-6FA7-4EB6-ADBE-14E15C4D8D88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontService", "FrontService\FrontService.csproj", "{BEE5106E-82AB-412D-A924-7652489BF1E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderPickingServise", "OrderPickingServise", "{DDC02A0F-1DC1-411B-9907-D979739BC7D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Api", "OrderPickingServise\OrderPickingService.Api\OrderPickingService.Api.csproj", "{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,14 +42,40 @@ Global
 		{6E105776-E0E9-48B5-A451-9900A10B13E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E105776-E0E9-48B5-A451-9900A10B13E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E105776-E0E9-48B5-A451-9900A10B13E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF660B9C-0052-C4C7-9C6D-0E8AB59DD79E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF660B9C-0052-C4C7-9C6D-0E8AB59DD79E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF660B9C-0052-C4C7-9C6D-0E8AB59DD79E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF660B9C-0052-C4C7-9C6D-0E8AB59DD79E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE45AEA3-D613-4FC9-A995-1F6D7C122708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE45AEA3-D613-4FC9-A995-1F6D7C122708}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE45AEA3-D613-4FC9-A995-1F6D7C122708}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE45AEA3-D613-4FC9-A995-1F6D7C122708}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81059195-E589-4CCA-73B3-11ACB651970E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81059195-E589-4CCA-73B3-11ACB651970E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81059195-E589-4CCA-73B3-11ACB651970E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81059195-E589-4CCA-73B3-11ACB651970E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEE5106E-82AB-412D-A924-7652489BF1E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEE5106E-82AB-412D-A924-7652489BF1E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEE5106E-82AB-412D-A924-7652489BF1E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEE5106E-82AB-412D-A924-7652489BF1E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{30ED240D-AC2F-46DA-9A03-DC8DA6EEBAB2} = {D205BDAA-A4F9-45CA-94D0-62F23C70B570}
 		{6E105776-E0E9-48B5-A451-9900A10B13E8} = {A448CD97-D983-4258-B79D-45791A58CA19}
-		{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9} = {7999A122-79B5-4152-ACA7-7D84B0F42E88}
+		{BF660B9C-0052-C4C7-9C6D-0E8AB59DD79E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{FE45AEA3-D613-4FC9-A995-1F6D7C122708} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{81059195-E589-4CCA-73B3-11ACB651970E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{BEE5106E-82AB-412D-A924-7652489BF1E6} = {00DCA065-6FA7-4EB6-ADBE-14E15C4D8D88}
+		{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3} = {DDC02A0F-1DC1-411B-9907-D979739BC7D1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4BD570C6-AF3C-4DA7-BD96-A7122C11F394}
 	EndGlobalSection
 EndGlobal
