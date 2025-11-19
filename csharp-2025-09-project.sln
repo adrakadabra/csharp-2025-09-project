@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Purrrrgrammer", "Purrrrgram
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Api", "AuthService\AuthService.Api\AuthService.Api.csproj", "{6E105776-E0E9-48B5-A451-9900A10B13E8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderPickingService", "OrderPickingService", "{7999A122-79B5-4152-ACA7-7D84B0F42E88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Api", "OrderPickingService.Api\OrderPickingService.Api.csproj", "{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,9 +27,14 @@ Global
 		{6E105776-E0E9-48B5-A451-9900A10B13E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E105776-E0E9-48B5-A451-9900A10B13E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E105776-E0E9-48B5-A451-9900A10B13E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{30ED240D-AC2F-46DA-9A03-DC8DA6EEBAB2} = {D205BDAA-A4F9-45CA-94D0-62F23C70B570}
 		{6E105776-E0E9-48B5-A451-9900A10B13E8} = {A448CD97-D983-4258-B79D-45791A58CA19}
+		{C9BABA50-AA9B-49E2-ACD1-27DE1013CDD9} = {7999A122-79B5-4152-ACA7-7D84B0F42E88}
 	EndGlobalSection
 EndGlobal
