@@ -28,6 +28,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontService", "FrontServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontService", "FrontService\FrontService.csproj", "{BEE5106E-82AB-412D-A924-7652489BF1E6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderPickingServise", "OrderPickingServise", "{DDC02A0F-1DC1-411B-9907-D979739BC7D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Api", "OrderPickingServise\OrderPickingService.Api\OrderPickingService.Api.csproj", "{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +58,10 @@ Global
 		{BEE5106E-82AB-412D-A924-7652489BF1E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEE5106E-82AB-412D-A924-7652489BF1E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEE5106E-82AB-412D-A924-7652489BF1E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +73,7 @@ Global
 		{FE45AEA3-D613-4FC9-A995-1F6D7C122708} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{81059195-E589-4CCA-73B3-11ACB651970E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{BEE5106E-82AB-412D-A924-7652489BF1E6} = {00DCA065-6FA7-4EB6-ADBE-14E15C4D8D88}
+		{BB2E08F9-B1BF-4E61-B1C0-A28473C10BD3} = {DDC02A0F-1DC1-411B-9907-D979739BC7D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4BD570C6-AF3C-4DA7-BD96-A7122C11F394}
