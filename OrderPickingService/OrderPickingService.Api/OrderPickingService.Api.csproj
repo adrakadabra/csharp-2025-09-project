@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>OrderPickingServise.Api</RootNamespace>
+        <RootNamespace>OrderPickingService.Api</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,6 +18,10 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OrderPickingService.Infrastructure.Database\OrderPickingService.Infrastructure.Database.csproj" />
     </ItemGroup>
 
 </Project>
