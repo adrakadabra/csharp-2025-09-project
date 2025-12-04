@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using OrderPickingService.Api.Services;
+using OrderPickingService.Infrastructure.Database;
 
 namespace OrderPickingService.Api;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,10 +11,10 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(options =>
+        var services = builder.Services;
+        services.AddControllers();
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(options =>
         {
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -41,7 +42,7 @@ public class Program
             });
         });
 
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => //TODO: вынести в настройки
             {
                 options.Authority = "http://localhost:8080/realms/csharp-2025-09-project";
@@ -54,8 +55,11 @@ public class Program
                     NameClaimType = "preferred_username" 
                 };
             });
-        builder.Services.AddScoped<IClaimsTransformation, KeycloakRolesTransformer>();
-        builder.Services.AddAuthorization();
+        services
+            .AddScoped<IClaimsTransformation, KeycloakRolesTransformer>()
+            .AddAuthorization()
+            .AddDatabase(builder.Configuration)
+            ;
         
         var app = builder.Build();
         
