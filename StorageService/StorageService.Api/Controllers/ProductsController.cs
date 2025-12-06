@@ -20,9 +20,10 @@ namespace StorageService.Api.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] CreateProductDto dto)
         {
             var created = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = created.Id }, created);
+            return CreatedAtAction(nameof(GetByIdAsync), new { created.Id }, created);
         }
 
+        [ActionName("GetByIdAsync")]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
