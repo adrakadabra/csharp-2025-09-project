@@ -1,15 +1,18 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OrderPickingService.Infrastructure.Database;
+using OrderPickingService.Services.Picker.Abstractions;
+using OrderPickingService.Services.Repositories.Abstractions;
 
 namespace OrderPickingService.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
-public class TestController : ControllerBase
+public class TestController(IPickerService pickerService) : ControllerBase
 {
     [HttpGet]
+    [Authorize]
     public IActionResult GetProducts()
     {
         var roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
@@ -42,5 +45,12 @@ public class TestController : ControllerBase
     public IActionResult GetCustomerData()
     {
         return Ok(new { Message = "Данные для заказчиков" });
+    }
+    
+    [HttpGet("GetPickers")]
+    public async Task<IActionResult> GetPickers()
+    {
+        var result = await pickerService.GetPickers();
+        return Ok(result);
     }
 }
