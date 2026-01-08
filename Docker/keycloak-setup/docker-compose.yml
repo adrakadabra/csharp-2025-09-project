@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  keycloak:
+  keycloak-test:
     image: quay.io/keycloak/keycloak:24.0.1
     environment:
       # Пароль для админа Keycloak
@@ -9,10 +9,14 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin123
       # Пока embedded БД для простоты
       KC_DB: dev-file
+      KC_FEATURES: scripts
     ports:
       # Открываем порт для доступа
       - "8080:8080"
+    volumes:
+      - ./import:/opt/keycloak/data/import
+      - ./scripts:/opt/keycloak/data/import-scripts
     command:
       # Запускаем в development режиме
-      - start-dev
-  
+      - start-dev 
+      - --import-realm

@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using OrderPickingService.Api.Services;
 using OrderPickingService.Infrastructure.Database;
+using OrderPickingService.Services;
 
 namespace OrderPickingService.Api;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -59,6 +61,7 @@ public class Program
             .AddScoped<IClaimsTransformation, KeycloakRolesTransformer>()
             .AddAuthorization()
             .AddDatabase(builder.Configuration)
+            .AddDomainServices()
             ;
         
         var app = builder.Build();
@@ -68,7 +71,13 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        
+        app.UseHealthChecks("/health");
+        app.UseHealthChecks("/order_picking_service", new HealthCheckOptions
+        {
+            Predicate = healthCheck => healthCheck.Tags.Contains("order_picking_service")
+        });
+        
         app.UseHttpsRedirection();
 
         app.UseAuthentication();

@@ -13,6 +13,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{D205BDAA-A4F9-45CA-94D0-62F23C70B570}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Purrrrgrammer", "Purrrrgrammer", "{30ED240D-AC2F-46DA-9A03-DC8DA6EEBAB2}"
+	ProjectSection(SolutionItems) = preProject
+		Docker\Purrrrgrammer\docker-compose.yml = Docker\Purrrrgrammer\docker-compose.yml
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthService.Api", "AuthService\AuthService.Api\AuthService.Api.csproj", "{6E105776-E0E9-48B5-A451-9900A10B13E8}"
 EndProject
@@ -46,7 +49,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{66
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Services", "OrderPickingService\OrderPickingService.Services\OrderPickingService.Services.csproj", "{EBFD6E90-7B4C-4035-8E3F-E596AE121F20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Serices.Repositories.Abstractions", "OrderPickingService\OrderPickingService.Serices.Repositories.Abstractions\OrderPickingService.Serices.Repositories.Abstractions.csproj", "{CF723BF0-DB87-4CE3-A30A-73BD343B0FBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Services.Repositories.Abstractions", "OrderPickingService\OrderPickingService.Services.Repositories.Abstractions\OrderPickingService.Services.Repositories.Abstractions.csproj", "{CF723BF0-DB87-4CE3-A30A-73BD343B0FBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Postgres", "Postgres", "{5D7A8835-D4E6-497D-8F66-81A93213C197}"
+	ProjectSection(SolutionItems) = preProject
+		Docker\Purrrrgrammer\Postgress\docker-compose.yml = Docker\Purrrrgrammer\Postgress\docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -114,6 +122,7 @@ Global
 		{6634CD89-763E-40A3-962E-6DB435CB62FA} = {DDC02A0F-1DC1-411B-9907-D979739BC7D1}
 		{EBFD6E90-7B4C-4035-8E3F-E596AE121F20} = {6634CD89-763E-40A3-962E-6DB435CB62FA}
 		{CF723BF0-DB87-4CE3-A30A-73BD343B0FBF} = {6634CD89-763E-40A3-962E-6DB435CB62FA}
+		{5D7A8835-D4E6-497D-8F66-81A93213C197} = {30ED240D-AC2F-46DA-9A03-DC8DA6EEBAB2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4BD570C6-AF3C-4DA7-BD96-A7122C11F394}
