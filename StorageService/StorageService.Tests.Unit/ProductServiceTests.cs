@@ -1,9 +1,9 @@
 using Moq;
 using FluentAssertions;
-using StorageService.Api.Infrastructure.Repositories;
 using StorageService.Api.Application.Services;
 using StorageService.Api.Application.DTOs;
 using StorageService.Api.Domain.Entities;
+using StorageService.Api.Infrastructure.Interfaces;
 
 namespace StorageService.Tests.Unit;
 

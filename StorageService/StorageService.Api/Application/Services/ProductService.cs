@@ -1,65 +1,133 @@
 using StorageService.Api.Application.DTOs;
 using StorageService.Api.Application.Interfaces;
-using StorageService.Api.Infrastructure.Repositories;
+using StorageService.Api.Application.Mappers;
 using StorageService.Api.Domain.Entities;
+using StorageService.Api.Infrastructure.Interfaces;
 
-namespace StorageService.Api.Application.Services;
-
-public class ProductService : IProductService
+namespace StorageService.Api.Application.Services
 {
-    private readonly IProductRepository _repo;
-
-    public ProductService(IProductRepository repo)
+    public class ProductService : IProductService
     {
-        _repo = repo;
-    }
+        private readonly IProductRepository _repo;
 
-    public async Task<ProductDto> CreateAsync(CreateProductDto dto)
-    {
-        var entity = new Product
+        private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly ISectionService _sectionService;
+
+        public ProductService(IProductRepository repo, ICategoryService categoryService,
+            IManufacturerService manufacturerService, ISectionService sectionService)
         {
-            Id = Guid.NewGuid(),
-            Name = dto.Name,
-            Description = dto.Description,
-            Quantity = dto.Quantity,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            IsDeleted = false
-        };
+            _repo = repo;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _sectionService = sectionService;
+        }
 
-        var created = await _repo.AddAsync(entity);
+        public async Task<ProductDto> CreateAsync(CreateProductDto dto)
+        {
+            var section = await _sectionService.GetByCodeAsync(dto.SectionCode);
 
-        return new ProductDto(created.Id, created.Name, created.Description, created.Quantity, created.Price, created.CreatedAt, created.UpdatedAt);
-    }
+            if (section == null) { throw new InvalidOperationException("Not exist section code"); }
 
-    public async Task<ProductDto?> GetByIdAsync(Guid id)
-    {
-        var p = await _repo.GetByIdAsync(id);
-        if (p == null) return null;
-        return new ProductDto(p.Id, p.Name, p.Description, p.Quantity, p.Price, p.CreatedAt, p.UpdatedAt);
-    }
+            var category = await _categoryService.GetOrCreateAsync(dto.CategoryName);
+            var manufacturer = await _manufacturerService.GetOrCreateAsync(dto.ManufacturerName);
 
-    public async Task<PagedResult<ProductDto>> GetPagedAsync(int page, int pageSize)
-    {
-        var (items, total) = await _repo.GetPagedAsync(page, pageSize);
-        var dtoItems = items.Select(p => new ProductDto(p.Id, p.Name, p.Description, p.Quantity, p.Price, p.CreatedAt, p.UpdatedAt)).ToArray();
-        return new PagedResult<ProductDto> { Items = dtoItems, Page = page, PageSize = pageSize, Total = total };
-    }
+            var product = new Product
+            {
+                Id = Guid.NewGuid(),
+                Name = dto.Name,
+                Price = dto.Price,
+                Quantity = dto.Quantity,
+                CategoryId = category.Id,
+                ManufacturerId = manufacturer.Id,
+                SectionId = section.Id,
+                CreatedAt = DateTime.UtcNow,
+            };
 
-    public async Task<bool> UpdateAsync(Guid id, UpdateProductDto dto)
-    {
-        var p = await _repo.GetByIdAsync(id);
-        if (p == null) return false;
-        p.Update(dto.Name, dto.Description, dto.Quantity, dto.Price);
-        await _repo.UpdateAsync(p);
-        return true;
-    }
+            var newProduct = await _repo.AddAsync(product);
 
-    public async Task<bool> DeleteAsync(Guid id)
-    {
-        var p = await _repo.GetByIdAsync(id);
-        if (p == null) return false;
-        await _repo.DeleteAsync(p);
-        return true;
+            return newProduct.ToDto();
+        }
+
+        public async Task<ProductDto?> GetByIdAsync(Guid id)
+        {
+            var product = await _repo.GetByIdAsync(id);
+            return product?.ToDto();
+        }
+
+        public async Task<PagedResult<ProductDto>> GetPagedAsync(int page, int pageSize)
+        {
+            var (items, total) = await _repo.GetPagedAsync(page, pageSize);
+            var dtoItems = items.Select(p => p.ToDto()).ToArray();
+            return new PagedResult<ProductDto> { Items = dtoItems, Page = page, PageSize = pageSize, Total = total };
+        }
+
+        public async Task<bool> UpdateAsync(Guid id, UpdateProductDto dto)
+        {
+            var product = await _repo.GetByIdAsync(id);
+            if (product == null) throw new Exception();
+
+            if (!string.IsNullOrEmpty(dto.SectionCode))
+            {
+                var section = await _sectionService.GetByCodeAsync(dto.SectionCode);
+
+                if (section == null) { throw new InvalidOperationException("Not exist section code"); }
+
+                product.SectionId = section.Id;
+            }
+
+            if (!string.IsNullOrEmpty(dto.CategoryName))
+            {
+                var oldCategoryId = product.CategoryId;
+                var newCategory = await _categoryService.GetOrCreateAsync(dto.CategoryName);
+                await _categoryService.HandleUnusedAsync(oldCategoryId);
+                product.CategoryId = newCategory.Id;
+            }
+
+            if (!string.IsNullOrEmpty(dto.ManufacturerName))
+            {
+                var oldManufacturerId = product.ManufacturerId;
+                var newManufacturer = await _categoryService.GetOrCreateAsync(dto.ManufacturerName);
+                await _manufacturerService.HandleUnusedAsync(oldManufacturerId);
+                product.ManufacturerId = newManufacturer.Id;
+            }
+
+            if (!string.IsNullOrEmpty(dto.Description)) { product.Description = dto.Description; }
+
+            if (!string.IsNullOrEmpty(dto.Name)) { product.Name = dto.Name; }
+
+            if (dto.Price.HasValue)
+            {
+                product.Price = dto.Price.Value;
+            }
+
+            if (dto.Quantity.HasValue)
+            {
+                product.Quantity = dto.Quantity.Value;
+            }
+
+            await _repo.UpdateAsync(product);
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var product = await _repo.GetByIdAsync(id);
+            if (product == null) return false;
+            var categoryId = product.CategoryId;
+            var manuId = product.ManufacturerId;
+            await _categoryService.HandleUnusedAsync(categoryId);
+            await _manufacturerService.HandleUnusedAsync(manuId);
+
+            await _repo.DeleteAsync(product);
+            return true;
+        }
+
+        public async Task<List<ProductDto>> GetBySectionIdAsync(Guid sectionId)
+        {
+            var res = await _repo.GetBySectionIdAsync(sectionId);
+
+            return res.Select(s => s.ToDto()).ToList();
+        }
     }
 }

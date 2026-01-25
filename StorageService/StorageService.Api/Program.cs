@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using StorageService.Api.Application.Interfaces;
 using StorageService.Api.Application.Services;
 using StorageService.Api.Infrastructure.Data;
+using StorageService.Api.Infrastructure.Interfaces;
 using StorageService.Api.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ISectionRepository, SectionRepository>();
+builder.Services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+builder.Services.AddScoped<ISectionService, SectionService>();
+builder.Services.AddScoped<IManufacturerService, ManufacturerService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddControllers();

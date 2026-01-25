@@ -1,4 +1,3 @@
-
 using FluentValidation;
 using StorageService.Api.Application.DTOs;
 
