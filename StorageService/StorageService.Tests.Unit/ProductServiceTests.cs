@@ -5,6 +5,8 @@ using StorageService.Api.Application.DTOs;
 using StorageService.Api.Domain.Entities;
 using StorageService.Api.Infrastructure.Interfaces;
 using StorageService.Api.Application.Interfaces;
+using MassTransit;
+using Microsoft.Extensions.Configuration;
 
 namespace StorageService.Tests.Unit;
 
@@ -17,13 +19,15 @@ public class ProductServiceTests
         var catServiceMock = new Mock<ICategoryService>();
         var manuServiceMock = new Mock<IManufacturerService>();
         var sectionServiceMock = new Mock<ISectionService>();
+        var busControlMock = new Mock<IBusControl>();
+        var configurationMock = new Mock<IConfiguration>();
         repoMock.Setup(r => r.AddAsync(It.IsAny<Product>()))
             .ReturnsAsync((Product p) => p);
 
         var service = new ProductService(repoMock.Object, catServiceMock.Object,
-            manuServiceMock.Object, sectionServiceMock.Object);
+            manuServiceMock.Object, sectionServiceMock.Object, busControlMock.Object, configurationMock.Object);
 
-        var dto = new CreateProductDto("Test", "Desc", 5, 100, "test", "test", "M3");
+        var dto = new CreateProductDto("Test", "1274y8241", "Desc", 5, 100, "test", "test", "M3");
 
         var result = await service.CreateAsync(dto);
 
@@ -39,10 +43,12 @@ public class ProductServiceTests
         var catServiceMock = new Mock<ICategoryService>();
         var manuServiceMock = new Mock<IManufacturerService>();
         var sectionServiceMock = new Mock<ISectionService>();
+        var busControlMock = new Mock<IBusControl>();
+        var configurationMock = new Mock<IConfiguration>();
         repoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Product?)null);
 
         var service = new ProductService(repoMock.Object, catServiceMock.Object,
-            manuServiceMock.Object, sectionServiceMock.Object);
+            manuServiceMock.Object, sectionServiceMock.Object, busControlMock.Object, configurationMock.Object);
         var ok = await service.UpdateAsync(Guid.NewGuid(), new UpdateProductDto { Name = "X", Quantity = 1, Price = 1m });
 
         ok.Should().BeFalse();

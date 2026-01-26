@@ -21,6 +21,7 @@ namespace StorageService.Api.Application.Mappers
                 Manufacturer = product.Manufacturer.ToDto(),
                 Section = product.Section.ToDto(),
                 UpdatedBy = product.UpdatedBy,
+                Article = product.Article,
             };
         }
 

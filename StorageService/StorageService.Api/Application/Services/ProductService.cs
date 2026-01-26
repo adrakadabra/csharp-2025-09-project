@@ -1,6 +1,9 @@
+using Common.Messages;
+using MassTransit;
 using StorageService.Api.Application.DTOs;
 using StorageService.Api.Application.Interfaces;
 using StorageService.Api.Application.Mappers;
+using StorageService.Api.Configurations;
 using StorageService.Api.Domain.Entities;
 using StorageService.Api.Infrastructure.Interfaces;
 
@@ -13,14 +16,25 @@ namespace StorageService.Api.Application.Services
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly ISectionService _sectionService;
+        private readonly IBusControl _busControl;
+        private readonly string? _queueForSendMessage;
 
         public ProductService(IProductRepository repo, ICategoryService categoryService,
-            IManufacturerService manufacturerService, ISectionService sectionService)
+            IManufacturerService manufacturerService, ISectionService sectionService, IBusControl busControl, IConfiguration configuration)
         {
             _repo = repo;
             _categoryService = categoryService;
             _manufacturerService = manufacturerService;
             _sectionService = sectionService;
+
+            _busControl = busControl;
+            var rmqSettings = configuration.GetSection("RabbitMqConfiguration").Get<RabbitMqConfiguration>();
+            _queueForSendMessage = configuration["RMQ_PRODUCT_FROM_STORAGE_QUEUE"] ?? rmqSettings?.ProductsFromStorageQueue;
+
+            if (string.IsNullOrEmpty(_queueForSendMessage))
+            {
+                _queueForSendMessage = "storage-product-messages-queue";
+            }
         }
 
         public async Task<ProductDto> CreateAsync(CreateProductDto dto)
@@ -43,10 +57,23 @@ namespace StorageService.Api.Application.Services
                 SectionId = section.Id,
                 CreatedAt = DateTime.UtcNow,
                 //todo: from claims
-                CreatedBy = "user"
+                CreatedBy = "user",
+                Article = dto.Article,
             };
 
             var newProduct = await _repo.AddAsync(product);
+
+            var sendEndpoint = await _busControl.GetSendEndpoint(new Uri($"queue:{_queueForSendMessage}"));
+
+            await sendEndpoint.Send(new ProductMessageFromStorage
+            {
+                Article = newProduct.Article,
+                Name = newProduct.Name,
+                EventType = ProductEventType.ProductAddedToStock,
+                Price = newProduct.Price,
+                ProductId = newProduct.Id,
+                QuantityInStock = newProduct.Quantity
+            });
 
             return newProduct.ToDto();
         }
@@ -68,6 +95,14 @@ namespace StorageService.Api.Application.Services
         {
             var product = await _repo.GetByIdAsync(id);
             if (product == null) throw new Exception();
+
+            var sendEndpoint = await _busControl.GetSendEndpoint(new Uri($"queue:{_queueForSendMessage}"));
+
+            var messageForChange = new ProductMessageFromStorage
+            {
+                EventType = ProductEventType.ProductChanged,
+                ProductId = product.Id,
+            };
 
             if (!string.IsNullOrEmpty(dto.SectionCode))
             {
@@ -96,16 +131,28 @@ namespace StorageService.Api.Application.Services
 
             if (!string.IsNullOrEmpty(dto.Description)) { product.Description = dto.Description; }
 
-            if (!string.IsNullOrEmpty(dto.Name)) { product.Name = dto.Name; }
+            if (!string.IsNullOrEmpty(dto.Name))
+            {
+                product.Name = dto.Name;
+                messageForChange.Name = dto.Name;
+            }
+
+            if (!string.IsNullOrEmpty(dto.Article))
+            {
+                product.Article = dto.Article;
+                messageForChange.Article = dto.Article;
+            }
 
             if (dto.Price.HasValue)
             {
                 product.Price = dto.Price.Value;
+                messageForChange.Price = dto.Price.Value;
             }
 
             if (dto.Quantity.HasValue)
             {
                 product.Quantity = dto.Quantity.Value;
+                messageForChange.QuantityInStock = dto.Quantity.Value;
             }
 
             product.UpdatedAt = DateTime.UtcNow;
@@ -113,6 +160,9 @@ namespace StorageService.Api.Application.Services
             product.UpdatedBy = "user";
 
             await _repo.UpdateAsync(product);
+
+            await sendEndpoint.Send(messageForChange);
+
             return true;
         }
 
@@ -126,6 +176,17 @@ namespace StorageService.Api.Application.Services
             await _manufacturerService.HandleUnusedAsync(manuId);
 
             await _repo.DeleteAsync(product);
+
+            var sendEndpoint = await _busControl.GetSendEndpoint(new Uri($"queue:{_queueForSendMessage}"));
+
+            await sendEndpoint.Send(new ProductMessageFromStorage
+            {
+                EventType = ProductEventType.ProductRemovedFromStock,
+                ProductId = product.Id,
+                Article = product.Article,
+                Name = product.Name,
+            });
+
             return true;
         }
 
