@@ -63,17 +63,24 @@ namespace StorageService.Api.Application.Services
 
             var newProduct = await _repo.AddAsync(product);
 
-            var sendEndpoint = await _busControl.GetSendEndpoint(new Uri($"queue:{_queueForSendMessage}"));
-
-            await sendEndpoint.Send(new ProductMessageFromStorage
+            try
             {
-                Article = newProduct.Article,
-                Name = newProduct.Name,
-                EventType = ProductEventType.ProductAddedToStock,
-                Price = newProduct.Price,
-                ProductId = newProduct.Id,
-                QuantityInStock = newProduct.Quantity
-            });
+                var sendEndpoint = await _busControl.GetSendEndpoint(new Uri($"queue:{_queueForSendMessage}"));
+
+                await sendEndpoint.Send(new ProductMessageFromStorage
+                {
+                    Article = newProduct.Article,
+                    Name = newProduct.Name,
+                    EventType = ProductEventType.ProductAddedToStock,
+                    Price = newProduct.Price,
+                    ProductId = newProduct.Id,
+                    QuantityInStock = newProduct.Quantity
+                });
+            }
+            catch (Exception ex)
+            {
+                // todo: log
+            }
 
             return newProduct.ToDto();
         }
@@ -94,7 +101,7 @@ namespace StorageService.Api.Application.Services
         public async Task<bool> UpdateAsync(Guid id, UpdateProductDto dto)
         {
             var product = await _repo.GetByIdAsync(id);
-            if (product == null) throw new Exception();
+            if (product == null) return false;
 
             var sendEndpoint = await _busControl.GetSendEndpoint(new Uri($"queue:{_queueForSendMessage}"));
 
@@ -161,7 +168,14 @@ namespace StorageService.Api.Application.Services
 
             await _repo.UpdateAsync(product);
 
-            await sendEndpoint.Send(messageForChange);
+            try
+            {
+                await sendEndpoint.Send(messageForChange);
+            }
+            catch (Exception ex)
+            {
+                // todo:log
+            }
 
             return true;
         }
@@ -177,15 +191,22 @@ namespace StorageService.Api.Application.Services
 
             await _repo.DeleteAsync(product);
 
-            var sendEndpoint = await _busControl.GetSendEndpoint(new Uri($"queue:{_queueForSendMessage}"));
-
-            await sendEndpoint.Send(new ProductMessageFromStorage
+            try
             {
-                EventType = ProductEventType.ProductRemovedFromStock,
-                ProductId = product.Id,
-                Article = product.Article,
-                Name = product.Name,
-            });
+                var sendEndpoint = await _busControl.GetSendEndpoint(new Uri($"queue:{_queueForSendMessage}"));
+
+                await sendEndpoint.Send(new ProductMessageFromStorage
+                {
+                    EventType = ProductEventType.ProductRemovedFromStock,
+                    ProductId = product.Id,
+                    Article = product.Article,
+                    Name = product.Name,
+                });
+            }
+            catch (Exception ex)
+            {
+                // todo: log
+            }
 
             return true;
         }

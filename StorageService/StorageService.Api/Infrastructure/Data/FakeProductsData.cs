@@ -27,6 +27,7 @@ public static class FakeProductsData
             Id = new Guid(),
             CreatedAt = DateTime.UtcNow,
             CreatedBy = "Me",
+            Article = "123123",
             Description = "Масло 5w-40",
             IsDeleted = false,
             Name = "Машинное масло",
