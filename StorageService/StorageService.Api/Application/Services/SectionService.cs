@@ -1,6 +1,9 @@
-﻿using StorageService.Api.Application.DTOs;
+﻿using Common.Messages;
+using MassTransit;
+using StorageService.Api.Application.DTOs;
 using StorageService.Api.Application.Interfaces;
 using StorageService.Api.Application.Mappers;
+using StorageService.Api.Configurations;
 using StorageService.Api.Infrastructure.Interfaces;
 
 namespace StorageService.Api.Application.Services
@@ -12,12 +15,24 @@ namespace StorageService.Api.Application.Services
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufService;
 
-        public SectionService(ISectionRepository repo, IManufacturerService manufacturerService, ICategoryService categoryService, IProductRepository productRepo)
+        private readonly IBusControl _busControl;
+        private readonly string? _queueForSendMessage;
+
+        public SectionService(ISectionRepository repo, IManufacturerService manufacturerService, ICategoryService categoryService, IProductRepository productRepo, IBusControl busControl, IConfiguration configuration)
         {
             _repo = repo;
             _categoryService = categoryService;
             _manufService = manufacturerService;
             _productRepo = productRepo;
+
+            _busControl = busControl;
+            var rmqSettings = configuration.GetSection("RabbitMqConfiguration").Get<RabbitMqConfiguration>();
+            _queueForSendMessage = configuration["RMQ_PRODUCT_FROM_STORAGE_QUEUE"] ?? rmqSettings?.ProductsFromStorageQueue;
+
+            if (string.IsNullOrEmpty(_queueForSendMessage))
+            {
+                _queueForSendMessage = "storage-product-messages-queue";
+            }
         }
         public async Task<SectionDto> CreateAsync(string code, string? description)
         {
@@ -44,6 +59,19 @@ namespace StorageService.Api.Application.Services
                 .ToList();
 
             await _repo.DeleteAsync(sectionId);
+
+            var sendEndpoint = await _busControl.GetSendEndpoint(new Uri($"queue:{_queueForSendMessage}"));
+
+            foreach (var product in products)
+            {
+                await sendEndpoint.Send(new ProductMessageFromStorage
+                {
+                    EventType = ProductEventType.ProductRemovedFromStock,
+                    ProductId = product.Id,
+                    Article = product.Article,
+                    Name = product.Name
+                });
+            }
 
             foreach (var categoryId in affectedCategoryIds)
                 await _categoryService.HandleUnusedAsync(categoryId);
