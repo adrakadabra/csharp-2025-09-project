@@ -22,7 +22,25 @@ public class ProductRepositoryTests
         var ctx = CreateContext();
         var repo = new ProductRepository(ctx);
 
-        var p = new Product { Id = Guid.NewGuid(), Name = "R1", Quantity = 2, Price = 3m, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow };
+        var section = await ctx.Sections.AddAsync(new Section { Id = Guid.NewGuid(), Code = "M3", Description = "desctiption" });
+        var manuf = await ctx.Manufacturers.AddAsync(new Manufacturer { Id = Guid.NewGuid(), Country = "Russia", Name = "Autovaz" });
+        var category = await ctx.Categories.AddAsync(new Category { Id = Guid.NewGuid(), Name = "test", Description = "test" });
+
+        var p = new Product
+        {
+            Id = Guid.NewGuid(),
+            Name = "R1",
+            Quantity = 2,
+            Price = 3m,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = "user",
+            UpdatedAt = DateTime.UtcNow,
+            UpdatedBy = "user",
+            Article = "asd",
+            CategoryId = category.Entity.Id,
+            ManufacturerId = manuf.Entity.Id,
+            SectionId = section.Entity.Id,
+        };
         await repo.AddAsync(p);
 
         var fetched = await repo.GetByIdAsync(p.Id);
@@ -36,13 +54,30 @@ public class ProductRepositoryTests
     {
         var ctx = CreateContext();
         var repo = new ProductRepository(ctx);
+        var section = await ctx.Sections.AddAsync(new Section { Id = Guid.NewGuid(), Code = "M3", Description = "desctiption" });
+        var manuf = await ctx.Manufacturers.AddAsync(new Manufacturer { Id = Guid.NewGuid(), Country = "Russia", Name = "Autovaz" });
+        var category = await ctx.Categories.AddAsync(new Category { Id = Guid.NewGuid(), Name = "test", Description = "test" });
 
-        var p = new Product { Id = Guid.NewGuid(), Name = "ToDelete", Quantity = 0, Price = 0m, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow };
+        var p = new Product
+        {
+            Id = Guid.NewGuid(),
+            Name = "ToDelete",
+            Quantity = 2,
+            Price = 3m,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = "user",
+            UpdatedAt = DateTime.UtcNow,
+            UpdatedBy = "user",
+            Article = "asd",
+            CategoryId = category.Entity.Id,
+            ManufacturerId = manuf.Entity.Id,
+            SectionId = section.Entity.Id
+        };
         await repo.AddAsync(p);
         await repo.DeleteAsync(p);
 
         var (items, total) = await repo.GetPagedAsync(1, 10);
 
-        total.Should().Be(1);
+        total.Should().Be(0);
     }
 }

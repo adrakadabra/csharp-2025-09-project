@@ -1,6 +1,3 @@
-
-using System.Collections.Generic;
-
 namespace StorageService.Api.Application.DTOs;
 
 public class PagedResult<T>

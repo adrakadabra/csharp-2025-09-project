@@ -1,7 +1,10 @@
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using StorageService.Api.Application.Interfaces;
 using StorageService.Api.Application.Services;
+using StorageService.Api.Helpers;
 using StorageService.Api.Infrastructure.Data;
+using StorageService.Api.Infrastructure.Interfaces;
 using StorageService.Api.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,11 +32,33 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             });
     }
     else
-        options.UseNpgsql(conn);
+        options.UseNpgsql(builder.Configuration["CONNECTION_STRING"] ?? throw new InvalidProgramException("No connection for data base"));
 });
 
+builder.Services.AddMassTransit(x => {
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        //x.AddConsumer<IConsumer>();
+        RabbitConfigurator.ConfigureRmq(cfg, builder.Configuration);
+        //RabbitConfigurator.RegisterEndPoints(cfg, context);
+    });
+});
+
+builder.Services.AddCors(options =>
+    options.AddPolicy("myCors", policy =>
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin()));
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ISectionRepository, SectionRepository>();
+builder.Services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+builder.Services.AddScoped<ISectionService, SectionService>();
+builder.Services.AddScoped<IManufacturerService, ManufacturerService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddControllers();
@@ -52,18 +77,35 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors(policy =>
+    policy
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        //.AllowAnyOrigin()
+        .SetIsOriginAllowed(x => true)
+        .AllowCredentials());
+
+if (!app.Environment.IsDevelopment() || !app.Environment.IsStaging())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/health", () => Task.FromResult<IResult>(TypedResults.Text("Storage service working")))
+    .WithName("CheckHealth")
+    .WithTags("Сервис")
+    .Produces(200)
+    .AllowAnonymous();
 
 app.Run();
 
