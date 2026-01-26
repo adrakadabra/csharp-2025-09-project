@@ -57,7 +57,18 @@ namespace StorageService.Api.Infrastructure.Repositories
         {
             var existSection = await GetAsync(section.Id);
             if(existSection == null) { throw new InvalidOperationException("No section for update"); }
-            await UpdateAsync(section);
+
+            if (!string.IsNullOrEmpty(section.Code))
+            {
+                existSection.Code = section.Code;
+            }
+
+            if (!string.IsNullOrEmpty(section.Description))
+            {
+                existSection.Description = section.Description;
+            }
+
+            await _db.SaveChangesAsync();
         }
     }
 }

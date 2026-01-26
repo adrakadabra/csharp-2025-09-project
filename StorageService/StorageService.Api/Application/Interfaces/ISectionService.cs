@@ -8,7 +8,7 @@ namespace StorageService.Api.Application.Interfaces
         Task<SectionDto?> GetByIdAsync(Guid sectionId);
         Task<SectionDto?> GetByCodeAsync(string code);
         Task<List<SectionDto>> GetAllAsync();
-        Task UpdateAsync(Guid id, UpdateSectionDto section);
+        Task UpdateAsync(Guid id, CreateOrUpdateSectionDto section);
         Task DeleteAsync(Guid sectionId);
     }
 }

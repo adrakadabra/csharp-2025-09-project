@@ -42,6 +42,8 @@ namespace StorageService.Api.Application.Services
                 ManufacturerId = manufacturer.Id,
                 SectionId = section.Id,
                 CreatedAt = DateTime.UtcNow,
+                //todo: from claims
+                CreatedBy = "user"
             };
 
             var newProduct = await _repo.AddAsync(product);
@@ -105,6 +107,10 @@ namespace StorageService.Api.Application.Services
             {
                 product.Quantity = dto.Quantity.Value;
             }
+
+            product.UpdatedAt = DateTime.UtcNow;
+            //todo: from claims
+            product.UpdatedBy = "user";
 
             await _repo.UpdateAsync(product);
             return true;

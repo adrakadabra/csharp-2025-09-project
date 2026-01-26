@@ -33,13 +33,4 @@ public class Product
         IsDeleted = true;
         UpdatedAt = DateTime.UtcNow;
     }
-
-    public void Update(string name, string? description, int quantity, decimal price)
-    {
-        Name = name;
-        Description = description;
-        Quantity = quantity;
-        Price = price;
-        UpdatedAt = DateTime.UtcNow;
-    }
 }

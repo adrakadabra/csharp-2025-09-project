@@ -17,9 +17,13 @@ namespace StorageService.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] string code, string? description = null)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateOrUpdateSectionDto dto)
         {
-            var created = await _service.CreateAsync(code, description);
+            if (string.IsNullOrEmpty(dto.Code))
+            {
+                return BadRequest("Code must be fill");
+            }
+            var created = await _service.CreateAsync(dto.Code, dto.Description);
             return CreatedAtAction(nameof(GetByIdAsync), new { created.Id }, created);
         }
 
@@ -33,7 +37,7 @@ namespace StorageService.Api.Controllers
         }
 
         [ActionName("GetByCodeAsync")]
-        [HttpGet("{code:string}")]
+        [HttpGet("{code}")]
         public async Task<IActionResult> GetByCodeAsync(string code)
         {
             var p = await _service.GetByCodeAsync(code);
@@ -49,7 +53,7 @@ namespace StorageService.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateSectionDto dto)
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] CreateOrUpdateSectionDto dto)
         {
             await _service.UpdateAsync(id, dto);
             return NoContent();

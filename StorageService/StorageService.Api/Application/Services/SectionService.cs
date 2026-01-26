@@ -69,7 +69,7 @@ namespace StorageService.Api.Application.Services
             return (await _repo.GetAsync(sectionId))?.ToDto();
         }
 
-        public async Task UpdateAsync(Guid id, UpdateSectionDto section)
+        public async Task UpdateAsync(Guid id, CreateOrUpdateSectionDto section)
         {
             var existSection = await _repo.GetAsync(id);
 
