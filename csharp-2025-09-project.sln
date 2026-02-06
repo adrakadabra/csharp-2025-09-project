@@ -46,14 +46,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{66
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Services", "OrderPickingService\OrderPickingService.Services\OrderPickingService.Services.csproj", "{EBFD6E90-7B4C-4035-8E3F-E596AE121F20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Serices.Repositories.Abstractions", "OrderPickingService\OrderPickingService.Serices.Repositories.Abstractions\OrderPickingService.Serices.Repositories.Abstractions.csproj", "{CF723BF0-DB87-4CE3-A30A-73BD343B0FBF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{9E344203-4C98-4B0E-8261-0919779A930F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{D82CDA0F-24CD-41DE-8BF3-749D38764EE7}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Services.Repositories.Abstractions", "OrderPickingService\OrderPickingService.Services.Repositories.Abstractions\OrderPickingService.Services.Repositories.Abstractions.csproj", "{92A03D8F-480D-4404-8BD5-1ED1CCC9123E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,14 +97,14 @@ Global
 		{EBFD6E90-7B4C-4035-8E3F-E596AE121F20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBFD6E90-7B4C-4035-8E3F-E596AE121F20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBFD6E90-7B4C-4035-8E3F-E596AE121F20}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF723BF0-DB87-4CE3-A30A-73BD343B0FBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF723BF0-DB87-4CE3-A30A-73BD343B0FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF723BF0-DB87-4CE3-A30A-73BD343B0FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF723BF0-DB87-4CE3-A30A-73BD343B0FBF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9E344203-4C98-4B0E-8261-0919779A930F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9E344203-4C98-4B0E-8261-0919779A930F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E344203-4C98-4B0E-8261-0919779A930F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E344203-4C98-4B0E-8261-0919779A930F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92A03D8F-480D-4404-8BD5-1ED1CCC9123E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92A03D8F-480D-4404-8BD5-1ED1CCC9123E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92A03D8F-480D-4404-8BD5-1ED1CCC9123E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92A03D8F-480D-4404-8BD5-1ED1CCC9123E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,8 +124,8 @@ Global
 		{7242E967-9A78-478C-8135-107D52CA6FC2} = {009EB492-CD41-4F6A-8123-4EE4E80C881D}
 		{6634CD89-763E-40A3-962E-6DB435CB62FA} = {DDC02A0F-1DC1-411B-9907-D979739BC7D1}
 		{EBFD6E90-7B4C-4035-8E3F-E596AE121F20} = {6634CD89-763E-40A3-962E-6DB435CB62FA}
-		{CF723BF0-DB87-4CE3-A30A-73BD343B0FBF} = {6634CD89-763E-40A3-962E-6DB435CB62FA}
 		{9E344203-4C98-4B0E-8261-0919779A930F} = {BA7A470E-A871-45A7-9F44-7FCB907C107F}
+		{92A03D8F-480D-4404-8BD5-1ED1CCC9123E} = {6634CD89-763E-40A3-962E-6DB435CB62FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4BD570C6-AF3C-4DA7-BD96-A7122C11F394}

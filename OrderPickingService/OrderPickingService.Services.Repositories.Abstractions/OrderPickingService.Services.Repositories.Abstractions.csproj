@@ -4,15 +4,11 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>OrderPickingService.Services.Repositories.Abstractions</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\OrderPickingService.Domain\OrderPickingService.Domain.csproj" />
-      <ProjectReference Include="..\OrderPickingService.Services.Repositories.Abstractions\OrderPickingService.Services.Repositories.Abstractions.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.11" />
     </ItemGroup>
 
 </Project>

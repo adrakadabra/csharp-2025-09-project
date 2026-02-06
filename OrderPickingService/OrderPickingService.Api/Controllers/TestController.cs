@@ -6,10 +6,10 @@ namespace OrderPickingService.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class TestController : ControllerBase
 {
     [HttpGet]
+    [Authorize]
     public IActionResult GetProducts()
     {
         var roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
