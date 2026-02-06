@@ -1,11 +1,11 @@
-namespace OrderPickingService.Infrastructure.Database.Dtos;
+namespace OrderPickingService.Infrastructure.Database.Entities;
 
 internal sealed class PickingSession
 {
     public long Id { get; set; }
     public long OrderId { get; set; }
     public long PickerId { get; set; } 
-    public Picker Picker { get; set; }
+    public PickerEntity PickerEntity { get; set; }
     public DateTime StartedAt { get; set; }
     public DateTime FinishedAt { get; set; }
     public PickingStatus PickingStatus { get; set; }

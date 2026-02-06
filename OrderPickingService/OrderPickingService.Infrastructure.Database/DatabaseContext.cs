@@ -1,18 +1,17 @@
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using OrderPickingService.Infrastructure.Database.Abstractions;
-using OrderPickingService.Infrastructure.Database.Dtos;
+using OrderPickingService.Infrastructure.Database.Entities;
 
 namespace OrderPickingService.Infrastructure.Database;
 
-internal sealed class DatabaseContext : DbContext, IDataBaseContext
+internal sealed class DatabaseContext : DbContext
 {
     public DatabaseContext(DbContextOptions<DatabaseContext> options)
         : base(options)
     { }
     
-    public DbSet<Picker> Pickers { get; set; }
+    public DbSet<PickerEntity> Pickers { get; set; }
     
     
     // public List<Picker> GetPickers()
@@ -70,7 +69,7 @@ internal sealed class DatabaseContext : DbContext, IDataBaseContext
         }
 
         
-        modelBuilder.Entity<Picker>(
+        modelBuilder.Entity<PickerEntity>(
             picker =>
             {
                 picker.HasKey(p => p.Id);

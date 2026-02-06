@@ -1,4 +1,4 @@
-namespace OrderPickingService.Infrastructure.Database.Dtos;
+namespace OrderPickingService.Infrastructure.Database.Entities;
 
 internal sealed class PickedItem
 {

@@ -1,15 +1,12 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OrderPickingService.Infrastructure.Database;
-using OrderPickingService.Services.Picker.Abstractions;
-using OrderPickingService.Services.Repositories.Abstractions;
 
 namespace OrderPickingService.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TestController(IPickerService pickerService) : ControllerBase
+public class TestController : ControllerBase
 {
     [HttpGet]
     [Authorize]
@@ -45,12 +42,5 @@ public class TestController(IPickerService pickerService) : ControllerBase
     public IActionResult GetCustomerData()
     {
         return Ok(new { Message = "Данные для заказчиков" });
-    }
-    
-    [HttpGet("GetPickers")]
-    public async Task<IActionResult> GetPickers()
-    {
-        var result = await pickerService.GetPickers();
-        return Ok(result);
     }
 }

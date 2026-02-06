@@ -4,5 +4,8 @@ namespace OrderPickingService.Services.Repositories.Abstractions;
 
 public interface IPickerRepository
 {
-    public Task<List<Picker>> GetPickers();
+    Task<List<Picker>> GetAllAsync();
+    Task<Picker?> GetByIdAsync(long id);
+    Task<Picker> CreateAsync(Picker picker);
+    Task UpdateAsync(Picker picker);
 }

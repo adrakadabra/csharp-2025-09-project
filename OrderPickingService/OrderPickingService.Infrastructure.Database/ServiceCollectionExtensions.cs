@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OrderPickingService.Infrastructure.Database.Abstractions;
 using OrderPickingService.Services.Repositories.Abstractions;
 
 namespace OrderPickingService.Infrastructure.Database;
@@ -26,7 +25,6 @@ public static class ServiceCollectionExtensions
                 tags: new[] { "order_picking_service" });
 
         services
-            .AddScoped<IDataBaseContext>(serviceProvider => serviceProvider.GetService<DatabaseContext>()!)
             .AddScoped<IPickerRepository, PickerRepository>()
             ;
         

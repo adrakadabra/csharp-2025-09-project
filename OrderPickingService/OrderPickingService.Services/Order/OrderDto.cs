@@ -1,6 +1,6 @@
 namespace OrderPickingService.Services.Order;
 
-internal sealed class Order
+internal sealed class OrderDto
 {
 
     // public long Id { get; private set; }
