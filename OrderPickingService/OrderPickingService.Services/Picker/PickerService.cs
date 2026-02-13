@@ -6,59 +6,47 @@ namespace OrderPickingService.Services.Picker;
 
 internal sealed class PickerService(IPickerRepository pickerRepository) : IPickerService
 {
-    public async Task<List<PickerDto>> GetAllPickersAsync()
+    public async Task<List<PickerDto>> GetAllPickersAsync(CancellationToken cancellationToken = default)
     {
-        var pickers = await pickerRepository.GetAllAsync();
+        var pickers = await pickerRepository.GetAllAsync(cancellationToken);
         var pickerDtos = pickers
-            .Select(x => PickerDto.Create(x.Id, x.FirstName, x.LastName))
+            .Select(x => x.ToPickerDto())
             .ToList();
         
         return pickerDtos;
     }
-
-    public async Task<PickerDto?> GetPickerByIdAsync(long id)
+    
+    public async Task<PickerDto?> GetPickerByIdAsync(long id, CancellationToken cancellationToken = default)
     {
-        var picker = await pickerRepository.GetByIdAsync(id);
+        var picker = await pickerRepository.GetByIdAsync(id, cancellationToken);
         
-        return picker == null ? null : PickerDto.Create(picker.Id, picker.FirstName, picker.LastName);
+        return picker?.ToPickerDto();
     }
 
-    public async Task<PickerDto> CreatePickerAsync(CreatePickerDto pickerDto)
+    public async Task<PickerDto> CreatePickerAsync(CreatePickerDto pickerDto, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(pickerDto.FirstName) ||
-            string.IsNullOrEmpty(pickerDto.LastName))
-        {
-            throw new ArgumentException("First and last name are required");
-        }
+        var picker = await pickerRepository.CreateAsync(pickerDto.ToPicker(), cancellationToken);
         
-        var picker = await pickerRepository.CreateAsync(Domain.Entities.Picker.Create(pickerDto.FirstName, pickerDto.LastName));
-        
-        return PickerDto.Create(picker.Id, picker.FirstName, picker.LastName);
+        return picker.ToPickerDto();
     }
 
-    public async Task<PickerDto> UpdatePikerAsync(long id, UpdatePikerDto updatePikerDto)
+    public async Task<PickerDto> UpdatePikerAsync(UpdatePickerDto updatePickerDto, CancellationToken cancellationToken = default)
     {
-        var currentPicker = await pickerRepository.GetByIdAsync(id);
+        var currentPicker = await pickerRepository.GetByIdAsync(updatePickerDto.id, cancellationToken);
         
         if(currentPicker == null)
         {
-            throw new KeyNotFoundException($"Picker with id = {id} not found");
-        }
-
-        if (string.IsNullOrEmpty(updatePikerDto.FirstName) &&
-            string.IsNullOrEmpty(updatePikerDto.LastName))
-        {
-            throw new ArgumentException("First or last name are required");
+            throw new KeyNotFoundException($"Picker with id = {updatePickerDto.id} not found");
         }
  
-        if(!string.IsNullOrEmpty(updatePikerDto.FirstName))
-            currentPicker.ChangeFirstName(updatePikerDto.FirstName);
+        if(!string.IsNullOrEmpty(updatePickerDto.FirstName))
+            currentPicker.ChangeFirstName(updatePickerDto.FirstName);
 
-        if(!string.IsNullOrEmpty(updatePikerDto.LastName))
-            currentPicker.ChangeLastName(updatePikerDto.LastName);
+        if(!string.IsNullOrEmpty(updatePickerDto.LastName))
+            currentPicker.ChangeLastName(updatePickerDto.LastName);
         
-        await pickerRepository.UpdateAsync(currentPicker);
+        await pickerRepository.UpdateAsync(currentPicker, cancellationToken);
         
-        return PickerDto.Create(currentPicker.Id, currentPicker.FirstName, currentPicker.LastName);
+        return currentPicker.ToPickerDto();
     }
 }

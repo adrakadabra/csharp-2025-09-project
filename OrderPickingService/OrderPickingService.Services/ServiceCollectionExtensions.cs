@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using OrderPickingService.Services.Order;
+using OrderPickingService.Services.Order.Abstractions;
 using OrderPickingService.Services.Picker;
 using OrderPickingService.Services.Picker.Abstractions;
 
@@ -10,6 +12,7 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddScoped<IPickerService, PickerService>()
+            .AddScoped<IOrderService, OrderService>()
             ;
         
         return services;

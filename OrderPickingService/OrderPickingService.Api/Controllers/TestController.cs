@@ -6,7 +6,7 @@ namespace OrderPickingService.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TestController : ControllerBase
+public sealed class TestController : ControllerBase
 {
     [HttpGet]
     [Authorize]
