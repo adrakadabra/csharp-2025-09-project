@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
@@ -62,6 +63,7 @@ public class Program
             .AddAuthorization()
             .AddDatabase(builder.Configuration)
             .AddDomainServices()
+            .AddValidatorsFromAssembly(typeof(Program).Assembly)
             ;
         
         var app = builder.Build();
