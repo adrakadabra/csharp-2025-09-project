@@ -15,3 +15,4 @@ services:
     command:
       # Запускаем в development режиме
       - start-dev
+  

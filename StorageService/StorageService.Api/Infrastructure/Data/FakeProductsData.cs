@@ -7,6 +7,16 @@ namespace StorageService.Api.Infrastructure.Data;
 /// </summary>
 public static class FakeProductsData
 {
+    private static Guid SectionId = Guid.NewGuid();
+    public static List<Section> Sections { get; } = new List<Section>
+    {
+        new Section
+        {
+            Id = SectionId,
+            Code = "M3",
+            Description = "Масла"
+        }
+    };
     /// <summary>
     /// Продукты
     /// </summary>
@@ -16,11 +26,26 @@ public static class FakeProductsData
         {
             Id = new Guid(),
             CreatedAt = DateTime.UtcNow,
-            Description = "test",
+            CreatedBy = "Me",
+            Article = "123123",
+            Description = "Масло 5w-40",
             IsDeleted = false,
-            Name = "TestName",
-            Quantity = 0,
-            Price = 0
+            Name = "Машинное масло",
+            Quantity = 3,
+            Price = 1250,
+            Category = new Category
+            {
+                Id= new Guid(),
+                Name = "Автомобильные товары",
+                Description = "Автомобильные товары"
+            },
+            Manufacturer = new Manufacturer
+            {
+                Id= new Guid(),
+                Name = "Shell",
+                Country = "Германия"
+            },
+            SectionId = SectionId,
         }
     };
 }
