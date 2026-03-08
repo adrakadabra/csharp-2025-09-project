@@ -1,6 +1,6 @@
 namespace StorageService.Api.Domain.Entities;
 
-// Продукт
+// РџСЂРѕРґСѓРєС‚
 public class Product
 {
     public Guid Id { get; set; }
