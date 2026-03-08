@@ -1,67 +1,99 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OrdersService.Api.DTO;
-using OrdersService.Api.Services;
-using System.Security.Claims;
+using OrdersService.Api.Application.DTOs;
+using OrdersService.Api.Application.Interfaces;
 
-namespace OrdersService.Api.Controllers
+namespace OrdersService.Api.Controllers;
+
+[ApiController]
+[Route("api/orders")]
+[Authorize]
+public class OrdersController : ControllerBase
 {
-    [ApiController]
-    [Route("api/orders")]
-    [Authorize]
-    public class OrdersController : ControllerBase
+    private readonly IOrdersService _ordersService;
+
+    public OrdersController(IOrdersService ordersService)
     {
-        private readonly IOrdersService _ordersService;
+        _ordersService = ordersService;
+    }
 
-        public OrdersController(IOrdersService ordersService)
+    [HttpPost]
+    public async Task<ActionResult<OrderDto>> Create(
+        [FromBody] CreateOrderRequest request,
+        CancellationToken cancellationToken)
+    {
+        var userId = GetUserIdFromClaims();
+
+        if (userId is null)
+            return Unauthorized();
+
+        try
         {
-            _ordersService = ordersService;
-        }
+            var jwtToken = GetRawJwt();
+            var order = await _ordersService.CreateOrderAsync(userId, jwtToken, request, cancellationToken);
 
-        [HttpPost]
-        public async Task<ActionResult<OrderDto>> Create([FromBody] CreateOrderRequest request)
-        {
-            int userId = GetUserIdFromClaims();
-            string jwtToken = GetRawJwt();
-
-            var order = await _ordersService.CreateOrderAsync(userId, jwtToken, request);
             return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
         }
-
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<OrderDto>> GetById(int id)
+        catch (InvalidOperationException ex)
         {
-            var order = await _ordersService.GetByIdAsync(id);
-            if (order == null)
-                return NotFound();
-
-            return Ok(order);
+            return BadRequest(new { message = ex.Message });
         }
+    }
 
-        [HttpGet]
-        public async Task<ActionResult<List<OrderDto>>> GetMyOrders()
-        {
-            int userId = GetUserIdFromClaims();
-            var orders = await _ordersService.GetUserOrdersAsync(userId);
-            return Ok(orders);
-        }
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<OrderDto>> GetById(int id, CancellationToken cancellationToken)
+    {
+        var userId = GetUserIdFromClaims();
 
-        private int GetUserIdFromClaims()
-        {
-            var claim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
-            return int.Parse(claim.Value);
-        }
+        if (userId is null)
+            return Unauthorized();
 
-        private string GetRawJwt()
-        {
-            var authHeader = Request.Headers["Authorization"].FirstOrDefault();
-            if (string.IsNullOrEmpty(authHeader))
-                return string.Empty;
+        var order = await _ordersService.GetByIdAsync(id, cancellationToken);
 
-            if (authHeader.StartsWith("Bearer "))
-                return authHeader.Substring("Bearer ".Length);
+        if (order is null)
+            return NotFound();
 
-            return authHeader;
-        }
+        if (order.UserId != userId)
+            return Forbid();
+
+        return Ok(order);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<OrderDto>>> GetMyOrders(CancellationToken cancellationToken)
+    {
+        var userId = GetUserIdFromClaims();
+
+        if (userId is null)
+            return Unauthorized();
+
+        var orders = await _ordersService.GetUserOrdersAsync(userId, cancellationToken);
+        return Ok(orders);
+    }
+
+    private string? GetUserIdFromClaims()
+    {
+        var rawValue =
+            User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+            User.FindFirstValue("sub");
+
+        if (string.IsNullOrWhiteSpace(rawValue))
+            return null;
+
+        return rawValue;
+    }
+
+    private string GetRawJwt()
+    {
+        var authHeader = Request.Headers.Authorization.FirstOrDefault();
+
+        if (string.IsNullOrWhiteSpace(authHeader))
+            return string.Empty;
+
+        if (authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            return authHeader["Bearer ".Length..].Trim();
+
+        return authHeader.Trim();
     }
 }

@@ -180,6 +180,21 @@ namespace StorageService.Api.Application.Services
             return true;
         }
 
+        public async Task<List<ProductLookupDto>> GetByIdsAsync(List<Guid> ids)
+        {
+            if (ids.Count == 0)
+                return [];
+
+            var products = await _repo.GetByIdsAsync(ids);
+
+            return products.Select(p => new ProductLookupDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Quantity = p.Quantity
+            }).ToList();
+        }
+
         public async Task<bool> DeleteAsync(Guid id)
         {
             var product = await _repo.GetByIdAsync(id);
