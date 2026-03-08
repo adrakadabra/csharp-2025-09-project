@@ -16,14 +16,17 @@ using OrdersService.Api.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString =
-    builder.Configuration.GetConnectionString("OrdersDb") ??
-    "Host=localhost;Port=5432;Database=orders_db;Username=orders_user;Password=orders_password";
-
-builder.Services.AddDbContext<OrdersDbContext>(options =>
+if (!builder.Environment.IsEnvironment("Testing"))
 {
-    options.UseNpgsql(connectionString);
-});
+    var connectionString =
+        builder.Configuration.GetConnectionString("OrdersDb") ??
+        "Host=localhost;Port=5432;Database=orders_db;Username=orders_user;Password=orders_password";
+
+    builder.Services.AddDbContext<OrdersDbContext>(options =>
+    {
+        options.UseNpgsql(connectionString);
+    });
+}
 
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<IOrdersService, OrdersServicee>();
@@ -127,7 +130,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<OrdersDbContext>();
-    dbContext.Database.Migrate();
+    if (dbContext.Database.IsRelational())
+    {
+        dbContext.Database.Migrate();
+    }
 }
 
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
@@ -150,3 +156,7 @@ app.MapGet("/health", () => Results.Ok("Orders service working"))
     .AllowAnonymous();
 
 app.Run();
+
+public partial class Program
+{
+}
