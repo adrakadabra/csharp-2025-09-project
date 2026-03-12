@@ -67,4 +67,10 @@ public class ProductRepository : IProductRepository
     {
         return await GetProductsQuery().Where(p => p.SectionId == sectionId).ToListAsync();
     }
+
+    public async Task<Product?> GetByArticleAsync(string article)
+    {
+        return await _db.Products
+            .FirstOrDefaultAsync(p => p.Article == article && !p.IsDeleted);
+    }
 }

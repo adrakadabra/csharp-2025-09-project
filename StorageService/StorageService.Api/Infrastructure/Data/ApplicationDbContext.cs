@@ -11,6 +11,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Manufacturer> Manufacturers { get; set; }
     public DbSet<Section> Sections { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<ReservationItem> ReservationItems { get; set; }
 
     public static void SeedData(DbContext context)
     {
@@ -47,6 +49,15 @@ public class ApplicationDbContext : DbContext
                  .WithMany(s => s.Products)
                  .HasForeignKey(p => p.SectionId)
                  .OnDelete(DeleteBehavior.Cascade);
+
+            b.HasMany(p => p.ReservationItems)
+            .WithOne(s => s.Product)
+            .HasForeignKey(p => p.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+            b.HasIndex(x => x.Article)
+                .IsUnique();
 
             b.HasQueryFilter(x => !x.IsDeleted);
         });
@@ -89,6 +100,23 @@ public class ApplicationDbContext : DbContext
 
             b.HasIndex(x => x.Code)
                 .IsUnique();
+        });
+
+        modelBuilder.Entity<ReservationItem>(b =>
+        {
+            b.HasKey(x => x.Id);
+
+            b.HasOne(p => p.Reservation)
+            .WithMany(s => s.Items)
+            .HasForeignKey(p => p.ReservationId)
+            .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Reservation>(b =>
+        {
+            b.HasKey(x => x.Id);
+            b.HasIndex(x => x.OrderNumber)
+            .IsUnique();
         });
     }
 }

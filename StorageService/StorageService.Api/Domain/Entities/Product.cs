@@ -29,6 +29,37 @@ public class Product
     public DateTime? UpdatedAt { get; set; }
     public string? UpdatedBy { get; set; }
 
+    public int ReservedQuantity { get; set; }
+
+    public int AvailableQuantity => Quantity - ReservedQuantity;
+
+    public List<ReservationItem> ReservationItems { get; set; }
+
+    public void Reserve(int qty)
+    {
+        if (AvailableQuantity < qty)
+            throw new InvalidOperationException("Not enough items in stock");
+
+        ReservedQuantity += qty;
+    }
+
+    public void Release(int qty)
+    {
+        if (ReservedQuantity < qty)
+            throw new InvalidOperationException("Invalid release quantity");
+
+        ReservedQuantity -= qty;
+    }
+
+    public void Complete(int qty)
+    {
+        if (ReservedQuantity < qty || Quantity < qty)
+            throw new InvalidOperationException("Invalid complete quantity");
+
+        ReservedQuantity -= qty;
+        Quantity -= qty;
+    }
+
     public void SoftDelete()
     {
         IsDeleted = true;

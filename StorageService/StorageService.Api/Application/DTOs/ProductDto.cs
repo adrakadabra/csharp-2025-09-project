@@ -10,6 +10,7 @@ public class ProductDto
 
     public decimal Price { get; set; }
     public int Quantity { get; set; }
+    public int AvailableQuantity { get; set; }
     public CategoryDto Category { get; set; } = null!;
     public ManufacturerDto Manufacturer { get; set; } = null!;
     public SectionDto Section { get; set; } = null!;
