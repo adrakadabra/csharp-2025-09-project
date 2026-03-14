@@ -18,6 +18,11 @@ public class OrdersServicee : IOrdersService
     private readonly IOrderMessagePublisher _orderMessagePublisher;
     private readonly IValidator<CreateOrderRequest> _validator;
     private readonly IOrderPickingClient _orderPickingClient;
+    private IOrdersRepository object1;
+    private IWarehouseClient object2;
+    private IOrderMessagePublisher object3;
+    private IValidator<CreateOrderRequest> validator;
+
     //private IOrdersRepository object1;
     //private IWarehouseClient object2;
     //private IOrderMessagePublisher object3;
@@ -35,6 +40,14 @@ public class OrdersServicee : IOrdersService
         _orderMessagePublisher = orderMessagePublisher;
         _orderPickingClient = orderPickingClient;
         _validator = validator;
+    }
+
+    public OrdersServicee(IOrdersRepository object1, IWarehouseClient object2, IOrderMessagePublisher object3, IValidator<CreateOrderRequest> validator)
+    {
+        this.object1 = object1;
+        this.object2 = object2;
+        this.object3 = object3;
+        this.validator = validator;
     }
 
     //public OrdersServicee(IOrdersRepository object1, IWarehouseClient object2, IOrderMessagePublisher object3, IValidator<CreateOrderRequest> validator)
