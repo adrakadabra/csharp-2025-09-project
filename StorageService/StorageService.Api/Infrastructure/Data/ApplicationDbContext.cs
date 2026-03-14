@@ -16,8 +16,21 @@ public class ApplicationDbContext : DbContext
 
     public static void SeedData(DbContext context)
     {
-        context.Set<Section>().AddRange(FakeProductsData.Sections);
-        context.Set<Product>().AddRange(FakeProductsData.Products);
+        if (context.Set<Product>().Any())
+            return;
+
+        var seed = JsonSeedDataLoader.LoadProductsSeedJson();
+
+        var sections = JsonSeedDataLoader.BuildSections(seed);
+        var categories = JsonSeedDataLoader.BuildCategories(seed);
+        var manufacturers = JsonSeedDataLoader.BuildManufacturers(seed);
+        var products = JsonSeedDataLoader.BuildProducts(seed);
+
+        context.Set<Section>().AddRange(sections);
+        context.Set<Category>().AddRange(categories);
+        context.Set<Manufacturer>().AddRange(manufacturers);
+        context.Set<Product>().AddRange(products);
+
         context.SaveChanges();
     }
 
@@ -31,19 +44,21 @@ public class ApplicationDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(256);
 
-            b.Property(x => x.Price)
-                .HasPrecision(18, 2);
-
-            b.Property(x => x.Quantity)
+            b.Property(x => x.Article)
                 .IsRequired();
 
+            b.Property(x => x.Price)
+                .HasColumnType("decimal(18,2)");
+
             b.HasOne(x => x.Category)
-                .WithMany(c => c.Products)
-                .HasForeignKey(x => x.CategoryId);
+                .WithMany()
+                .HasForeignKey(x => x.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             b.HasOne(x => x.Manufacturer)
-                .WithMany(m => m.Products)
-                .HasForeignKey(x => x.ManufacturerId);
+                .WithMany()
+                .HasForeignKey(x => x.ManufacturerId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             b.HasOne(p => p.Section)
                  .WithMany(s => s.Products)
@@ -74,6 +89,8 @@ public class ApplicationDbContext : DbContext
 
             b.HasIndex(x => x.Name)
                 .IsUnique();
+
+            b.HasQueryFilter(x => !x.IsDeleted);
         });
 
         modelBuilder.Entity<Manufacturer>(b =>
@@ -84,10 +101,10 @@ public class ApplicationDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(128);
 
-            b.HasQueryFilter(x => !x.IsDeleted);
-
             b.HasIndex(x => x.Name)
                 .IsUnique();
+
+            b.HasQueryFilter(x => !x.IsDeleted);
         });
 
         modelBuilder.Entity<Section>(b =>
@@ -95,8 +112,7 @@ public class ApplicationDbContext : DbContext
             b.HasKey(x => x.Id);
 
             b.Property(x => x.Code)
-                .IsRequired()
-                .HasMaxLength(32);
+                .IsRequired();
 
             b.HasIndex(x => x.Code)
                 .IsUnique();
@@ -116,7 +132,7 @@ public class ApplicationDbContext : DbContext
         {
             b.HasKey(x => x.Id);
             b.HasIndex(x => x.OrderNumber)
-            .IsUnique();
+                .IsUnique();
         });
     }
 }

@@ -8,4 +8,24 @@ public interface IWarehouseClient
         IEnumerable<Guid> productIds,
         string jwtToken,
         CancellationToken cancellationToken = default);
+
+    Task<ReservedOrderInfo> ReserveProductsAsync(
+        ReserveProductsRequest request,
+        string jwtToken,
+        CancellationToken cancellationToken = default);
+
+    Task CancelReservationAsync(
+        Guid orderNumber,
+        string jwtToken,
+        CancellationToken cancellationToken = default);
+
+    Task CompleteReservationAsync(
+        Guid orderNumber,
+        string jwtToken,
+        CancellationToken cancellationToken = default);
+
+    Task<ReservedOrderInfo?> GetReservationAsync(
+        Guid orderNumber,
+        string jwtToken,
+        CancellationToken cancellationToken = default);
 }
