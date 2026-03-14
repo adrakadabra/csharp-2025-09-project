@@ -25,4 +25,14 @@
     <ProjectReference Include="..\..\Common\Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DataSeed\" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Update="DataSeed\products.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>

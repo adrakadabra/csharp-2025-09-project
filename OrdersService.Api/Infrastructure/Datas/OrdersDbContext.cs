@@ -20,6 +20,9 @@ public class OrdersDbContext : DbContext
 
             entity.HasKey(x => x.Id);
 
+            entity.Property(x => x.OrderNumber).IsRequired();
+            entity.HasIndex(x => x.OrderNumber).IsUnique();
+
             entity.Property(x => x.UserId)
                 .IsRequired()
                 .HasMaxLength(128);

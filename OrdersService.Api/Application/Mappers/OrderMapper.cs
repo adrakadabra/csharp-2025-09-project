@@ -10,6 +10,7 @@ public static class OrderMapper
         return new OrderDto
         {
             Id = order.Id,
+            OrderNumber = order.OrderNumber,
             UserId = order.UserId,
             Status = order.Status,
             CreatedAt = order.CreatedAt,
