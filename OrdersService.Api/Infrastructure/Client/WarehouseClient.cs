@@ -78,7 +78,7 @@ public class WarehouseClient : IWarehouseClient
         using var response = await _httpClient.SendAsync(request, cancellationToken);
         if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             return null;
-
+         
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<ReservedOrderInfo>(JsonOptions, cancellationToken);
     }
