@@ -9,6 +9,7 @@ using OrdersService.Api.Domain.Enums;
 using OrdersService.Api.Infrastructure.Clients;
 using OrdersService.Api.Infrastructure.Interfaces;
 using OrdersService.Api.Infrastructure.Messaging;
+using OrdersService.Api.Infrastructure.Messaging.Messages;
 using Xunit;
 
 namespace OrdersService.Api.Tests.Unit.Services;
@@ -18,6 +19,7 @@ public class OrdersServiceTests
     private readonly Mock<IOrdersRepository> _repositoryMock = new();
     private readonly Mock<IWarehouseClient> _warehouseClientMock = new();
     private readonly Mock<IOrderMessagePublisher> _publisherMock = new();
+    private readonly Mock<IOrderPickingClient> _orderPickingClientMock = new();
     private readonly IValidator<CreateOrderRequest> _validator = new CreateOrderRequestValidator();
 
     private OrdersServicee CreateService()
@@ -26,6 +28,7 @@ public class OrdersServiceTests
             _repositoryMock.Object,
             _warehouseClientMock.Object,
             _publisherMock.Object,
+            _orderPickingClientMock.Object,
             _validator);
     }
 
@@ -59,9 +62,30 @@ public class OrdersServiceTests
                 {
                     Id = productId,
                     Name = "Машинное масло",
-                    Quantity = 3
+                    Article = "AUTO-0001",
+                    Quantity = 3,
+                    AvailableQuantity = 3
                 }
             ]);
+
+        _warehouseClientMock
+            .Setup(x => x.ReserveProductsAsync(
+                It.IsAny<ReserveProductsRequest>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ReservedOrderInfo
+            {
+                OrderNumber = Guid.NewGuid(),
+                Items =
+                [
+                    new ReservedItemInfo
+                    {
+                        Article = "AUTO-0001",
+                        Quantity = 1,
+                        ReservationItemStatus = "Reserved"
+                    }
+                ]
+            });
 
         _repositoryMock
             .Setup(x => x.AddAsync(It.IsAny<Order>(), It.IsAny<CancellationToken>()))
@@ -76,8 +100,18 @@ public class OrdersServiceTests
             .Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
+        _orderPickingClientMock
+            .Setup(x => x.CreateOrderAsync(
+                It.IsAny<CreateAssemblyOrderRequest>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new AssemblyOrderResponse
+            {
+                Id = Guid.NewGuid()
+            });
+
         _publisherMock
-            .Setup(x => x.SendPickOrderAsync(It.IsAny<Infrastructure.Messaging.Messages.PickOrderMessage>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.SendPickOrderAsync(It.IsAny<PickOrderMessage>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         var service = CreateService();
@@ -94,12 +128,15 @@ public class OrdersServiceTests
         result.Id.Should().Be(123);
         result.UserId.Should().Be("user-123");
         result.Status.Should().Be(OrderStatus.Created);
+        result.OrderNumber.Should().NotBeEmpty();
         result.Items.Should().HaveCount(1);
         result.Items[0].ProductId.Should().Be(productId);
         result.Items[0].Quantity.Should().Be(1);
 
         addedOrder.Should().NotBeNull();
-        addedOrder!.UserId.Should().Be("user-123");
+        addedOrder!.Id.Should().Be(123);
+        addedOrder.OrderNumber.Should().NotBeEmpty();
+        addedOrder.UserId.Should().Be("user-123");
         addedOrder.Items.Should().HaveCount(1);
         addedOrder.Items[0].ProductId.Should().Be(productId);
         addedOrder.Items[0].Quantity.Should().Be(1);
@@ -109,11 +146,31 @@ public class OrdersServiceTests
             "jwt-token",
             It.IsAny<CancellationToken>()), Times.Once);
 
+        _warehouseClientMock.Verify(x => x.ReserveProductsAsync(
+            It.Is<ReserveProductsRequest>(r =>
+                r.OrderNumber != Guid.Empty &&
+                r.Items.Count == 1 &&
+                r.Items[0].Article == "AUTO-0001" &&
+                r.Items[0].Quantity == 1),
+            "jwt-token",
+            It.IsAny<CancellationToken>()), Times.Once);
+
         _repositoryMock.Verify(x => x.AddAsync(It.IsAny<Order>(), It.IsAny<CancellationToken>()), Times.Once);
-        _repositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _repositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
+
+        _orderPickingClientMock.Verify(x => x.CreateOrderAsync(
+            It.Is<CreateAssemblyOrderRequest>(r =>
+                r.OrderId == 123 &&
+                r.OrderNumber == addedOrder!.OrderNumber &&
+                r.UserId == "user-123" &&
+                r.Items.Count == 1 &&
+                r.Items[0].Article == "AUTO-0001" &&
+                r.Items[0].Quantity == 1),
+            "jwt-token",
+            It.IsAny<CancellationToken>()), Times.Once);
 
         _publisherMock.Verify(x => x.SendPickOrderAsync(
-            It.Is<Infrastructure.Messaging.Messages.PickOrderMessage>(m =>
+            It.Is<PickOrderMessage>(m =>
                 m.OrderId == 123 &&
                 m.UserId == "user-123" &&
                 m.Items.Count == 1 &&
@@ -145,8 +202,10 @@ public class OrdersServiceTests
         exception.Which.Message.Should().Contain("Заказ должен содержать хотя бы один товар.");
 
         _warehouseClientMock.Verify(x => x.GetProductsByIdsAsync(It.IsAny<IEnumerable<Guid>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _warehouseClientMock.Verify(x => x.ReserveProductsAsync(It.IsAny<ReserveProductsRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _orderPickingClientMock.Verify(x => x.CreateOrderAsync(It.IsAny<CreateAssemblyOrderRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         _repositoryMock.Verify(x => x.AddAsync(It.IsAny<Order>(), It.IsAny<CancellationToken>()), Times.Never);
-        _publisherMock.Verify(x => x.SendPickOrderAsync(It.IsAny<Infrastructure.Messaging.Messages.PickOrderMessage>(), It.IsAny<CancellationToken>()), Times.Never);
+        _publisherMock.Verify(x => x.SendPickOrderAsync(It.IsAny<PickOrderMessage>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -179,8 +238,10 @@ public class OrdersServiceTests
         exception.Which.Message.Should().Contain("Количество по каждому товару должно быть больше нуля.");
 
         _warehouseClientMock.Verify(x => x.GetProductsByIdsAsync(It.IsAny<IEnumerable<Guid>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _warehouseClientMock.Verify(x => x.ReserveProductsAsync(It.IsAny<ReserveProductsRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _orderPickingClientMock.Verify(x => x.CreateOrderAsync(It.IsAny<CreateAssemblyOrderRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         _repositoryMock.Verify(x => x.AddAsync(It.IsAny<Order>(), It.IsAny<CancellationToken>()), Times.Never);
-        _publisherMock.Verify(x => x.SendPickOrderAsync(It.IsAny<Infrastructure.Messaging.Messages.PickOrderMessage>(), It.IsAny<CancellationToken>()), Times.Never);
+        _publisherMock.Verify(x => x.SendPickOrderAsync(It.IsAny<PickOrderMessage>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -221,8 +282,10 @@ public class OrdersServiceTests
         var exception = await act.Should().ThrowAsync<InvalidOperationException>();
         exception.Which.Message.Should().Contain("Некоторые товары не найдены в сервисе склада.");
 
+        _warehouseClientMock.Verify(x => x.ReserveProductsAsync(It.IsAny<ReserveProductsRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _orderPickingClientMock.Verify(x => x.CreateOrderAsync(It.IsAny<CreateAssemblyOrderRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         _repositoryMock.Verify(x => x.AddAsync(It.IsAny<Order>(), It.IsAny<CancellationToken>()), Times.Never);
-        _publisherMock.Verify(x => x.SendPickOrderAsync(It.IsAny<Infrastructure.Messaging.Messages.PickOrderMessage>(), It.IsAny<CancellationToken>()), Times.Never);
+        _publisherMock.Verify(x => x.SendPickOrderAsync(It.IsAny<PickOrderMessage>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -254,7 +317,9 @@ public class OrdersServiceTests
                 {
                     Id = productId,
                     Name = "Product 1",
-                    Quantity = 3
+                    Article = "TEST-0001",
+                    Quantity = 10,
+                    AvailableQuantity = 3
                 }
             ]);
 
@@ -271,8 +336,10 @@ public class OrdersServiceTests
         var exception = await act.Should().ThrowAsync<InvalidOperationException>();
         exception.Which.Message.Should().Contain($"Недостаточно остатка на складе по товару {productId}");
 
+        _warehouseClientMock.Verify(x => x.ReserveProductsAsync(It.IsAny<ReserveProductsRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _orderPickingClientMock.Verify(x => x.CreateOrderAsync(It.IsAny<CreateAssemblyOrderRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         _repositoryMock.Verify(x => x.AddAsync(It.IsAny<Order>(), It.IsAny<CancellationToken>()), Times.Never);
-        _publisherMock.Verify(x => x.SendPickOrderAsync(It.IsAny<Infrastructure.Messaging.Messages.PickOrderMessage>(), It.IsAny<CancellationToken>()), Times.Never);
+        _publisherMock.Verify(x => x.SendPickOrderAsync(It.IsAny<PickOrderMessage>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -309,7 +376,9 @@ public class OrdersServiceTests
                 {
                     Id = productId,
                     Name = "Product 1",
-                    Quantity = 3
+                    Article = "TEST-0002",
+                    Quantity = 10,
+                    AvailableQuantity = 3
                 }
             ]);
 
@@ -330,6 +399,9 @@ public class OrdersServiceTests
             It.Is<IEnumerable<Guid>>(ids => ids.Count() == 1 && ids.Single() == productId),
             It.IsAny<string>(),
             It.IsAny<CancellationToken>()), Times.Once);
+
+        _warehouseClientMock.Verify(x => x.ReserveProductsAsync(It.IsAny<ReserveProductsRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _orderPickingClientMock.Verify(x => x.CreateOrderAsync(It.IsAny<CreateAssemblyOrderRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -343,6 +415,7 @@ public class OrdersServiceTests
             .ReturnsAsync(new Order
             {
                 Id = 10,
+                OrderNumber = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                 UserId = "user-123",
                 Status = OrderStatus.Created,
                 CreatedAt = new DateTime(2026, 3, 8, 20, 0, 0, DateTimeKind.Utc),
@@ -367,6 +440,7 @@ public class OrdersServiceTests
         // Assert
         result.Should().NotBeNull();
         result!.Id.Should().Be(10);
+        result.OrderNumber.Should().Be(Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"));
         result.UserId.Should().Be("user-123");
         result.Status.Should().Be(OrderStatus.Created);
         result.Items.Should().HaveCount(1);
@@ -405,6 +479,7 @@ public class OrdersServiceTests
                 new Order
                 {
                     Id = 1,
+                    OrderNumber = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
                     UserId = "user-123",
                     Status = OrderStatus.Created,
                     CreatedAt = DateTime.UtcNow.AddMinutes(-10),
@@ -423,6 +498,7 @@ public class OrdersServiceTests
                 new Order
                 {
                     Id = 2,
+                    OrderNumber = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
                     UserId = "user-123",
                     Status = OrderStatus.Completed,
                     CreatedAt = DateTime.UtcNow.AddMinutes(-5),
@@ -449,6 +525,8 @@ public class OrdersServiceTests
         // Assert
         result.Should().HaveCount(2);
         result.Should().OnlyContain(x => x.UserId == "user-123");
+        result[0].OrderNumber.Should().Be(Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+        result[1].OrderNumber.Should().Be(Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"));
         result[0].Items.Should().HaveCount(1);
         result[1].Items.Should().HaveCount(1);
     }
@@ -485,6 +563,7 @@ public class OrdersServiceTests
         var order = new Order
         {
             Id = 2,
+            OrderNumber = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
             UserId = "user-123",
             Status = OrderStatus.Created,
             CreatedAt = new DateTime(2026, 3, 8, 19, 0, 0, DateTimeKind.Utc),
@@ -525,6 +604,7 @@ public class OrdersServiceTests
         var order = new Order
         {
             Id = 3,
+            OrderNumber = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
             UserId = "user-123",
             Status = OrderStatus.InProgress,
             CreatedAt = DateTime.UtcNow.AddHours(-1),
