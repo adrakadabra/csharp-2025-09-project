@@ -23,4 +23,42 @@ internal sealed class PickingSessionEntity : BaseEntity
     {
         PickedItems = new List<PickedItemEntity>();
     }
+    
+    public static PickingSessionEntity Create(long orderId, long pickerId)
+    {
+        return new PickingSessionEntity()
+        {
+            Id = 0,
+            OrderId = orderId,
+            PickerId = pickerId,
+            StartedAt = DateTime.UtcNow,
+            FinishedAt = null,
+            PickingStatus = PickingStatus.InProgress,
+            Notes = null,
+            PickedItems = new List<PickedItemEntity>()
+        };
+    }
+    
+    public static PickingSessionEntity Load(
+        long id,
+        long orderId,
+        long pickerId,
+        DateTime startedAt,
+        DateTime? finishedAt,
+        PickingStatus pickingStatus,
+        string? notes,
+        List<PickedItemEntity> pickedItems)
+    {
+        return new PickingSessionEntity()
+        {
+            Id = id,
+            OrderId = orderId,
+            PickerId = pickerId,
+            StartedAt = startedAt,
+            FinishedAt = finishedAt,
+            PickingStatus = pickingStatus,
+            Notes = notes,
+            PickedItems = pickedItems
+        };
+    }
 }

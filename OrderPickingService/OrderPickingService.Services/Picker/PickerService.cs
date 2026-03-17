@@ -4,7 +4,8 @@ using OrderPickingService.Services.Repositories.Abstractions;
 
 namespace OrderPickingService.Services.Picker;
 
-internal sealed class PickerService(IPickerRepository pickerRepository) : IPickerService
+internal sealed class PickerService(
+    IPickerRepository pickerRepository) : IPickerService
 {
     public async Task<List<PickerDto>> GetAllPickersAsync(CancellationToken cancellationToken = default)
     {

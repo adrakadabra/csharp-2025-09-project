@@ -16,11 +16,11 @@ internal sealed class PickerRepository(DatabaseContext databaseContext) : IPicke
 
     public async Task<Picker?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
-        var picker = await databaseContext.Pickers
+        var foundPicker = await databaseContext.Pickers
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(picker => picker.Id == id, cancellationToken);
         
-        return picker?.ToPicker();
+        return foundPicker?.ToPicker();
     }
 
     public async Task<Picker> CreateAsync(Picker picker, CancellationToken cancellationToken = default)
@@ -44,7 +44,6 @@ internal sealed class PickerRepository(DatabaseContext databaseContext) : IPicke
         entity.LastName = picker.LastName;
         entity.UpdatedAt = DateTime.UtcNow;
         entity.UpdatedBy = "system";
-        
         await databaseContext.SaveChangesAsync(cancellationToken);
     }
 }

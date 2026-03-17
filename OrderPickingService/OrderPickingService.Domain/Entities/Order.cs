@@ -9,6 +9,11 @@ public sealed class Order
     public OrderStatus OrderStatus { get; private set;  }
     public List<OrderItem> Items { get; private set;  }
 
+    public void ClaimOrder()
+    {
+        OrderStatus = OrderStatus.Picking;
+    }
+    
     public static Order Create(long externalId, List<OrderItem> items)
     {
         return new Order(0, externalId, OrderStatus.Available, items);
