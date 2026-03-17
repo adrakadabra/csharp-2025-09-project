@@ -15,6 +15,7 @@ namespace StorageService.Api.Application.Mappers
                 Name = product.Name,
                 Price = product.Price,
                 Quantity = product.Quantity,
+                AvailableQuantity = product.AvailableQuantity,
                 UpdatedAt = product.UpdatedAt,
                 Category = product.Category.ToDto(),
                 CreatedBy = product.CreatedBy,
@@ -52,6 +53,25 @@ namespace StorageService.Api.Application.Mappers
                 Code = section.Code,
                 Id = section.Id,
                 Description = section.Description
+            };
+        }
+
+        public static ReservedItemDto ToDto(this ReservationItem item)
+        {
+            return new ReservedItemDto
+            {
+                Article = item.Product.Article,
+                Quantity = item.Quantity,
+                ReservationItemStatus = item.ReservationStatus
+            };
+        }
+
+        public static ReservedOrderDto ToDto(this Reservation reservation)
+        {
+            return new ReservedOrderDto
+            {
+                Items = reservation.Items.Select(i => i.ToDto()).ToList(),
+                OrderNumber = reservation.OrderNumber
             };
         }
     }

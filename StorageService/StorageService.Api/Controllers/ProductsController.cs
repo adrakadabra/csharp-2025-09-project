@@ -48,6 +48,16 @@ namespace StorageService.Api.Controllers
             return NoContent();
         }
 
+        [HttpPost("by-ids")]
+        public async Task<IActionResult> GetByIdsAsync([FromBody] List<Guid> ids)
+        {
+            if (ids == null || ids.Count == 0)
+                return Ok(new List<ProductLookupDto>());
+
+            var result = await _service.GetByIdsAsync(ids);
+            return Ok(result);
+        }
+
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {

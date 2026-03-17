@@ -56,8 +56,21 @@ public class ProductRepository : IProductRepository
             .AsQueryable();
     }
 
+    public async Task<List<Product>> GetByIdsAsync(List<Guid> ids)
+    {
+        return await GetProductsQuery()
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync();
+    }
+
     public async Task<List<Product>> GetBySectionIdAsync(Guid sectionId)
     {
         return await GetProductsQuery().Where(p => p.SectionId == sectionId).ToListAsync();
+    }
+
+    public async Task<Product?> GetByArticleAsync(string article)
+    {
+        return await _db.Products
+            .FirstOrDefaultAsync(p => p.Article == article && !p.IsDeleted);
     }
 }
