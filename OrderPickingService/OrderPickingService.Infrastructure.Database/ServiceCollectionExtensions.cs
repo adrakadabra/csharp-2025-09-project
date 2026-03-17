@@ -32,6 +32,8 @@ public static class ServiceCollectionExtensions
         services
             .AddScoped<IPickerRepository, PickerRepository>()
             .AddScoped<IOrderRepository, OrderRepository>()
+            .AddScoped<IPickingSessionRepository, PickingSessionRepository>()
+            .AddScoped<IUnitOfWork, UnitOfWork>()
             ;
         
         return services;
