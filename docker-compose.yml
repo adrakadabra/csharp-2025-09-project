@@ -20,12 +20,12 @@ services:
       POSTGRES_PASSWORD: P@ssw0rd
       POSTGRES_MULTIPLE_DATABASES: UsersDb,StorageDb
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - shop-pg-network
     labels:
       - app=shop
-      
+
     restart: unless-stopped
     healthcheck:
       test: "pg_isready -U postgres"
@@ -40,11 +40,10 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
       RABBITMQ_DEFAULT_VHOST: /
     ports:
-      - "5672:5672"
-      - "15672:15672"
-    
+      - "5673:5672"
+      - "15673:15672"
     restart: unless-stopped
-    
+
     networks:
       - shop-network
     labels:
@@ -61,7 +60,7 @@ services:
       context: .
       dockerfile: StorageService/StorageService.Api/Dockerfile
     ports:
-    - "8080:8080"
+      - "8081:8080"
     pull_policy: build
     environment:
       CONNECTION_STRING: Host=postgres:5432;Username=postgres;Password=P@ssw0rd;Database=StorageDb
@@ -78,9 +77,9 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    
+
     restart: unless-stopped
-    
+
     depends_on:
       postgres:
         condition: service_healthy

@@ -41,6 +41,12 @@ builder.Services.AddHttpClient<IWarehouseClient, WarehouseClient>(client =>
     client.BaseAddress = new Uri(warehouseBaseUrl);
 });
 
+builder.Services.AddHttpClient<IOrderPickingClient, OrderPickingClient>(client =>
+{
+    var baseUrl = builder.Configuration["OrderPicking:BaseUrl"] ?? "http://localhost:5005";
+    client.BaseAddress = new Uri(baseUrl);
+});
+
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<OrderCompletedConsumer>();

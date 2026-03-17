@@ -60,6 +60,33 @@ public class OrdersController : ControllerBase
         return Ok(order);
     }
 
+    [HttpPut("{id:int}/cancel")]
+    public async Task<IActionResult> Cancel(int id, CancellationToken cancellationToken)
+    {
+        var userId = GetUserIdFromClaims();
+
+        if (userId is null)
+            return Unauthorized();
+
+        var jwtToken = Request.Headers.Authorization.ToString();
+        if (string.IsNullOrWhiteSpace(jwtToken))
+            return Unauthorized();
+
+        try
+        {
+            var cancelled = await _ordersService.CancelOrderAsync(id, userId, jwtToken, cancellationToken);
+
+            if (!cancelled)
+                return NotFound();
+
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [HttpGet]
     public async Task<ActionResult<List<OrderDto>>> GetMyOrders(CancellationToken cancellationToken)
     {

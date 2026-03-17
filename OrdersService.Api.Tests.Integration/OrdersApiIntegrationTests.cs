@@ -37,9 +37,40 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
                 {
                     Id = productId,
                     Name = "Test Product",
-                    Quantity = 5
+                    Article = "TEST-0001",
+                    Quantity = 5,
+                    AvailableQuantity = 5
                 }
             ]);
+
+        _factory.WarehouseClientMock
+            .Setup(x => x.ReserveProductsAsync(
+                It.IsAny<ReserveProductsRequest>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ReservedOrderInfo
+            {
+                OrderNumber = Guid.NewGuid(),
+                Items =
+                [
+                    new ReservedItemInfo
+                    {
+                        Article = "TEST-0001",
+                        Quantity = 2,
+                        ReservationItemStatus = "Reserved"
+                    }
+                ]
+            });
+
+        _factory.OrderPickingClientMock
+            .Setup(x => x.CreateOrderAsync(
+                It.IsAny<CreateAssemblyOrderRequest>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new AssemblyOrderResponse
+            {
+                Id = Guid.NewGuid()
+            });
 
         _factory.PublisherMock
             .Setup(x => x.SendPickOrderAsync(It.IsAny<PickOrderMessage>(), It.IsAny<CancellationToken>()))
@@ -64,6 +95,7 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
         var dto = await response.Content.ReadFromJsonAsync<OrderDto>();
         dto.Should().NotBeNull();
         dto!.Id.Should().BeGreaterThan(0);
+        dto.OrderNumber.Should().NotBeEmpty();
         dto.UserId.Should().Be("test-user-1");
         dto.Items.Should().HaveCount(1);
         dto.Items[0].ProductId.Should().Be(productId);
@@ -86,9 +118,40 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
                 {
                     Id = productId,
                     Name = "Test Product",
-                    Quantity = 10
+                    Article = "TEST-0002",
+                    Quantity = 10,
+                    AvailableQuantity = 10
                 }
             ]);
+
+        _factory.WarehouseClientMock
+            .Setup(x => x.ReserveProductsAsync(
+                It.IsAny<ReserveProductsRequest>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ReservedOrderInfo
+            {
+                OrderNumber = Guid.NewGuid(),
+                Items =
+                [
+                    new ReservedItemInfo
+                    {
+                        Article = "TEST-0002",
+                        Quantity = 1,
+                        ReservationItemStatus = "Reserved"
+                    }
+                ]
+            });
+
+        _factory.OrderPickingClientMock
+            .Setup(x => x.CreateOrderAsync(
+                It.IsAny<CreateAssemblyOrderRequest>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new AssemblyOrderResponse
+            {
+                Id = Guid.NewGuid()
+            });
 
         _factory.PublisherMock
             .Setup(x => x.SendPickOrderAsync(It.IsAny<PickOrderMessage>(), It.IsAny<CancellationToken>()))
@@ -169,9 +232,40 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
                 {
                     Id = productId,
                     Name = "Test Product",
-                    Quantity = 10
+                    Article = "TEST-0004",
+                    Quantity = 10,
+                    AvailableQuantity = 10
                 }
             ]);
+
+        _factory.WarehouseClientMock
+            .Setup(x => x.ReserveProductsAsync(
+                It.IsAny<ReserveProductsRequest>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ReservedOrderInfo
+            {
+                OrderNumber = Guid.NewGuid(),
+                Items =
+                [
+                    new ReservedItemInfo
+                    {
+                        Article = "TEST-0004",
+                        Quantity = 1,
+                        ReservationItemStatus = "Reserved"
+                    }
+                ]
+            });
+
+        _factory.OrderPickingClientMock
+            .Setup(x => x.CreateOrderAsync(
+                It.IsAny<CreateAssemblyOrderRequest>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new AssemblyOrderResponse
+            {
+                Id = Guid.NewGuid()
+            });
 
         _factory.PublisherMock
             .Setup(x => x.SendPickOrderAsync(It.IsAny<PickOrderMessage>(), It.IsAny<CancellationToken>()))

@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using OrdersService.Api.Application.DTOs;
 using OrdersService.Api.Application.Validators;
+using OrdersService.Api.Infrastructure.Clients;
 using OrdersService.Api.Infrastructure.Datas;
 using OrdersService.Api.Infrastructure.Interfaces;
 using OrdersService.Api.Infrastructure.Messaging;
@@ -22,6 +23,7 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
 
     public Mock<IWarehouseClient> WarehouseClientMock { get; } = new();
     public Mock<IOrderMessagePublisher> PublisherMock { get; } = new();
+    public Mock<IOrderPickingClient> OrderPickingClientMock { get; } = new();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -33,6 +35,7 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
             services.RemoveAll(typeof(OrdersDbContext));
             services.RemoveAll(typeof(IWarehouseClient));
             services.RemoveAll(typeof(IOrderMessagePublisher));
+            services.RemoveAll(typeof(IOrderPickingClient));
             services.RemoveAll(typeof(IValidator<CreateOrderRequest>));
 
             services.AddDbContext<OrdersDbContext>(options =>
@@ -44,6 +47,7 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
             services.AddScoped<IValidator<CreateOrderRequest>, CreateOrderRequestValidator>();
             services.AddScoped(_ => WarehouseClientMock.Object);
             services.AddScoped(_ => PublisherMock.Object);
+            services.AddScoped(_ => OrderPickingClientMock.Object);
 
             services.AddAuthentication(options =>
             {
