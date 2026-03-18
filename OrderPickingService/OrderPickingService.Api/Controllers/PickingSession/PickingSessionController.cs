@@ -37,4 +37,37 @@ public sealed class PickingSessionController(IPickingService pickingService) : C
             return StatusCode(StatusCodes.Status400BadRequest, e.Message);
         }
     }
+    
+    [HttpPost("PickItem")]
+    // [ProducesResponseType(typeof(CreatedPickingSessionDto),StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> PickItem(
+        PickItemDto pickItemDto,
+        [FromServices] IValidator<PickItemDto> validator,
+        CancellationToken cancellationToken)
+    {
+        var validationResult = await validator.ValidateAsync(pickItemDto, cancellationToken);
+        
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.GetErrors());
+        }
+        
+        try
+        {
+            var result = await pickingService.PickItemAsync(pickItemDto, cancellationToken);
+
+            if (result.Success)
+            {
+                return Created($"/api/pickedItem/{result.Item?.Id}", result);
+            }
+            
+            return StatusCode(StatusCodes.Status400BadRequest, result.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e); //TODO: add logging
+            return StatusCode(StatusCodes.Status400BadRequest, e.Message);
+        }
+    }
 }

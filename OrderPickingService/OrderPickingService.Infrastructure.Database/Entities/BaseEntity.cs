@@ -1,6 +1,6 @@
 namespace OrderPickingService.Infrastructure.Database.Entities;
 
-internal abstract class BaseEntity
+public abstract class BaseEntity
 {
     public DateTime CreatedAt { get; set; }
     public string CreatedBy { get; set; }

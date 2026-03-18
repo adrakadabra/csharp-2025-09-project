@@ -5,7 +5,7 @@ using OrderPickingService.Infrastructure.Database.Entities.Order;
 
 namespace OrderPickingService.Infrastructure.Database.Entities.PickingSession;
 
-internal sealed class PickingSessionEntity : BaseEntity
+public sealed class PickingSessionEntity : BaseEntity
 {
     public long Id { get; set; }
     public long OrderId { get; set; }

@@ -4,13 +4,13 @@ namespace OrderPickingService.Services.Order.Dtos;
 
 public sealed record OrderDto(
     long Id,
-    long ExternalId,
+    Guid ExternalId,
     OrderStatus OrderStatus,
     List<OrderItemDto> Items
 )
 {
     public static OrderDto Create(
-        long externalId, 
+        Guid externalId, 
         OrderStatus orderStatus,
         List<OrderItemDto> items)
     {
@@ -19,7 +19,7 @@ public sealed record OrderDto(
     
     public static OrderDto Load(
         long id, 
-        long externalId, 
+        Guid externalId, 
         OrderStatus orderStatus,
         List<OrderItemDto> items)
     {

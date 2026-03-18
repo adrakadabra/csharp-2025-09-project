@@ -1,7 +1,7 @@
 using FluentValidation;
 using OrderPickingService.Services.Picking.Dtos;
 
-namespace OrderPickingService.Api.Controllers.PickingSession.Actions.ClaimOrder.Validation;
+namespace OrderPickingService.Api.Controllers.PickingSession.Actions.ClaimOrder;
 
 public sealed class ClaimOrderDtoValidator : AbstractValidator<ClaimOrderDto>
 {

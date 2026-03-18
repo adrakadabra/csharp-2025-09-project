@@ -9,7 +9,7 @@ using OrderPickingService.Infrastructure.Database.Entities.PickingSession;
 
 namespace OrderPickingService.Infrastructure.Database;
 
-internal sealed class DatabaseContext : DbContext
+public sealed class DatabaseContext : DbContext
 {
     public DatabaseContext(DbContextOptions<DatabaseContext> options)
         : base(options)
@@ -180,14 +180,14 @@ internal sealed class DatabaseContext : DbContext
             });
     }
 }
-//Сгенерировать миграцию (AddOrderTables - название миграции)
-//dotnet ef migrations add AddOrderTables --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+//Сгенерировать миграцию (ChangeOrderExternalIdToGuid - название миграции)
+//dotnet ef migrations add ChangeOrderExternalIdToGuid --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
 //Обновить БД
 //dotnet ef database update --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
-// Обновить БД до миграции (AddOrderTables - название миграции)
-// dotnet ef database update AddOrderTables --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+// Обновить БД до миграции (ChangeOrderExternalIdToGuid - название миграции)
+// dotnet ef database update ChangeOrderExternalIdToGuid --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
 //Удалить последнюю миграцию
 //dotnet ef migrations remove --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext

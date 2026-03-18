@@ -18,14 +18,13 @@ services:
     image: postgres:latest
     environment:
       POSTGRES_PASSWORD: P@ssw0rd
-      POSTGRES_MULTIPLE_DATABASES: UsersDb,StorageDb
+      POSTGRES_MULTIPLE_DATABASES: UsersDb,StorageDb, OrderPickingDb
     ports:
       - "5433:5432"
     networks:
       - shop-pg-network
     labels:
       - app=shop
-
     restart: unless-stopped
     healthcheck:
       test: "pg_isready -U postgres"
@@ -43,7 +42,6 @@ services:
       - "5673:5672"
       - "15673:15672"
     restart: unless-stopped
-
     networks:
       - shop-network
     labels:
@@ -71,15 +69,12 @@ services:
       RMQ_PRODUCT_FROM_STORAGE_QUEUE: storage-product-messages-queue
       ASPNETCORE_ENVIRONMENT: "Staging"
       ASPNETCORE_URLS: http://+:8080
-
     healthcheck:
       test: "curl -f http://localhost:8080/health"
       interval: 5s
       timeout: 5s
       retries: 5
-
     restart: unless-stopped
-
     depends_on:
       postgres:
         condition: service_healthy
@@ -88,6 +83,35 @@ services:
     networks:
       - shop-network
       - shop-pg-network
+
+  order-picking-service:
+    image: order-picking-service
+    build:
+      context: .
+      dockerfile: OrderPickingService/OrderPickingService.Api/Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      #CONNECTION_STRING: Host=postgres:5432;Username=postgres;Password=P@ssw0rd;Database=OrderPickingDb
+      DataBase__ConnectionString: Host=postgres;Port=5432;Database=OrderPickingDb;Username=postgres;Password=P@ssw0rd
+      RMQ_HOST: rabbitmq
+      RMQ_PORT: 5672
+      RMQ_USER: guest
+      RMQ_PASSWORD: guest
+      STORAGE_SERVICE_URL: http://storage-service:8080
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      storage-service:
+        condition: service_healthy
+    networks:
+      - shop-network
+      - shop-pg-network
+    restart: unless-stopped
 
 networks:
   shop-network:
