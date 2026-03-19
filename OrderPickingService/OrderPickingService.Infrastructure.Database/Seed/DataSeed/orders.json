@@ -1,0 +1,366 @@
+[
+    {
+      "Id": 1,
+      "ExternalId": "11111111-1111-1111-1111-111111111111",
+      "OrderStatus": 1,
+      "CreatedAt": "2026-03-19T00:00:00Z",
+      "CreatedBy": "seed",
+      "IsDeleted": false,
+      "OrderItems": [
+        {
+          "Id": 1,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000003",
+          "ProductSku": "DAIRY-0001",
+          "ProductName": "Молоко",
+          "Quantity": 2,
+          "Price": 119.00,
+          "Category": "Молочные продукты",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 2,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000006",
+          "ProductSku": "BAKERY-0001",
+          "ProductName": "Хлеб белый",
+          "Quantity": 1,
+          "Price": 54.00,
+          "Category": "Хлеб и выпечка",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "ExternalId": "22222222-2222-2222-2222-222222222222",
+      "OrderStatus": 1,
+      "CreatedAt": "2026-03-19T00:00:00Z",
+      "CreatedBy": "seed",
+      "IsDeleted": false,
+      "OrderItems": [
+        {
+          "Id": 3,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000010",
+          "ProductSku": "VEGET-0001",
+          "ProductName": "Картофель",
+          "Quantity": 3,
+          "Price": 79.00,
+          "Category": "Овощи",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 4,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000011",
+          "ProductSku": "VEGET-0002",
+          "ProductName": "Огурцы",
+          "Quantity": 1,
+          "Price": 159.00,
+          "Category": "Овощи",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 5,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000008",
+          "ProductSku": "FRUITS-0001",
+          "ProductName": "Яблоки",
+          "Quantity": 2,
+          "Price": 149.00,
+          "Category": "Фрукты",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "ExternalId": "33333333-3333-3333-3333-333333333333",
+      "OrderStatus": 1,
+      "CreatedAt": "2026-03-19T00:00:00Z",
+      "CreatedBy": "seed",
+      "IsDeleted": false,
+      "OrderItems": [
+        {
+          "Id": 6,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000022",
+          "ProductSku": "DRINKS-0001",
+          "ProductName": "Минеральная вода",
+          "Quantity": 6,
+          "Price": 69.00,
+          "Category": "Напитки",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 7,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000023",
+          "ProductSku": "DRINKS-0002",
+          "ProductName": "Апельсиновый сок",
+          "Quantity": 2,
+          "Price": 149.00,
+          "Category": "Напитки",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        }
+      ]
+    },
+    {
+      "Id": 4,
+      "ExternalId": "44444444-4444-4444-4444-444444444444",
+      "OrderStatus": 1,
+      "CreatedAt": "2026-03-19T00:00:00Z",
+      "CreatedBy": "seed",
+      "IsDeleted": false,
+      "OrderItems": [
+        {
+          "Id": 8,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000012",
+          "ProductSku": "HOME-0001",
+          "ProductName": "Гель для стирки",
+          "Quantity": 1,
+          "Price": 599.00,
+          "Category": "Бытовая химия",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 9,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000013",
+          "ProductSku": "HOME-0002",
+          "ProductName": "Средство для посуды",
+          "Quantity": 2,
+          "Price": 249.00,
+          "Category": "Бытовая химия",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 10,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000014",
+          "ProductSku": "HOME-0003",
+          "ProductName": "Бумажные полотенца",
+          "Quantity": 3,
+          "Price": 129.00,
+          "Category": "Товары для дома",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        }
+      ]
+    },
+    {
+      "Id": 5,
+      "ExternalId": "55555555-5555-5555-5555-555555555555",
+      "OrderStatus": 1,
+      "CreatedAt": "2026-03-19T00:00:00Z",
+      "CreatedBy": "seed",
+      "IsDeleted": false,
+      "OrderItems": [
+        {
+          "Id": 11,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000020",
+          "ProductSku": "MEAT-0001",
+          "ProductName": "Куриное филе",
+          "Quantity": 2,
+          "Price": 329.00,
+          "Category": "Мясо и птица",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 12,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000021",
+          "ProductSku": "MEAT-0002",
+          "ProductName": "Фарш говяжий",
+          "Quantity": 1,
+          "Price": 289.00,
+          "Category": "Мясо и птица",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        }
+      ]
+    },
+    {
+      "Id": 6,
+      "ExternalId": "66666666-6666-6666-6666-666666666666",
+      "OrderStatus": 1,
+      "CreatedAt": "2026-03-19T00:00:00Z",
+      "CreatedBy": "seed",
+      "IsDeleted": false,
+      "OrderItems": [
+        {
+          "Id": 13,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000004",
+          "ProductSku": "DAIRY-0002",
+          "ProductName": "Сыр",
+          "Quantity": 3,
+          "Price": 219.00,
+          "Category": "Молочные продукты",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 14,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000005",
+          "ProductSku": "DAIRY-0003",
+          "ProductName": "Йогурт",
+          "Quantity": 5,
+          "Price": 89.00,
+          "Category": "Молочные продукты",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        }
+      ]
+    },
+    {
+      "Id": 7,
+      "ExternalId": "77777777-7777-7777-7777-777777777777",
+      "OrderStatus": 1,
+      "CreatedAt": "2026-03-19T00:00:00Z",
+      "CreatedBy": "seed",
+      "IsDeleted": false,
+      "OrderItems": [
+        {
+          "Id": 15,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000001",
+          "ProductSku": "AUTO-0001",
+          "ProductName": "Машинное масло",
+          "Quantity": 1,
+          "Price": 1250.00,
+          "Category": "Автомобильные товары",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 16,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000002",
+          "ProductSku": "AUTO-0002",
+          "ProductName": "Омыватель стекла",
+          "Quantity": 2,
+          "Price": 349.00,
+          "Category": "Автомобильные товары",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        }
+      ]
+    },
+    {
+      "Id": 8,
+      "ExternalId": "88888888-8888-8888-8888-888888888888",
+      "OrderStatus": 1,
+      "CreatedAt": "2026-03-19T00:00:00Z",
+      "CreatedBy": "seed",
+      "IsDeleted": false,
+      "OrderItems": [
+        {
+          "Id": 17,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000017",
+          "ProductSku": "ELECTRO-0001",
+          "ProductName": "Наушники беспроводные",
+          "Quantity": 1,
+          "Price": 2999.00,
+          "Category": "Электроника",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 18,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000018",
+          "ProductSku": "ELECTRO-0002",
+          "ProductName": "Кабель USB-C",
+          "Quantity": 3,
+          "Price": 299.00,
+          "Category": "Электроника",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        }
+      ]
+    },
+    {
+      "Id": 9,
+      "ExternalId": "99999999-9999-9999-9999-999999999999",
+      "OrderStatus": 1,
+      "CreatedAt": "2026-03-19T00:00:00Z",
+      "CreatedBy": "seed",
+      "IsDeleted": false,
+      "OrderItems": [
+        {
+          "Id": 19,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000015",
+          "ProductSku": "BEAUTY-0001",
+          "ProductName": "Духи",
+          "Quantity": 1,
+          "Price": 3499.00,
+          "Category": "Парфюмерия",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 20,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000016",
+          "ProductSku": "BEAUTY-0002",
+          "ProductName": "Шампунь",
+          "Quantity": 2,
+          "Price": 389.00,
+          "Category": "Уход за волосами",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        }
+      ]
+    },
+    {
+      "Id": 10,
+      "ExternalId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "OrderStatus": 1,
+      "CreatedAt": "2026-03-19T00:00:00Z",
+      "CreatedBy": "seed",
+      "IsDeleted": false,
+      "OrderItems": [
+        {
+          "Id": 21,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000019",
+          "ProductSku": "TIRES-0001",
+          "ProductName": "Шины летние",
+          "Quantity": 4,
+          "Price": 6590.00,
+          "Category": "Шины",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        },
+        {
+          "Id": 22,
+          "ProductExternalId": "40000000-0000-0000-0000-000000000024",
+          "ProductSku": "BABY-0001",
+          "ProductName": "Подгузники",
+          "Quantity": 2,
+          "Price": 1399.00,
+          "Category": "Детские товары",
+          "CreatedAt": "2026-03-19T00:00:00Z",
+          "CreatedBy": "seed",
+          "IsDeleted": false
+        }
+      ]
+    }
+]

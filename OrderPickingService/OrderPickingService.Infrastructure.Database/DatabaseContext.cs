@@ -6,6 +6,7 @@ using OrderPickingService.Infrastructure.Database.Entities;
 using OrderPickingService.Infrastructure.Database.Entities.Order;
 using OrderPickingService.Infrastructure.Database.Entities.Picker;
 using OrderPickingService.Infrastructure.Database.Entities.PickingSession;
+using OrderPickingService.Infrastructure.Database.Seed;
 
 namespace OrderPickingService.Infrastructure.Database;
 
@@ -178,16 +179,20 @@ public sealed class DatabaseContext : DbContext
                 
                 pickedItemEntity.HasIndex(pickedItem => pickedItem.OrderItemId);
             });
+        
+            new DataSeeder().Seed(modelBuilder);
     }
 }
-//Сгенерировать миграцию (ChangeOrderExternalIdToGuid - название миграции)
-//dotnet ef migrations add ChangeOrderExternalIdToGuid --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+//Сгенерировать миграцию (AddSeedData - название миграции)
+//dotnet ef migrations add AddSeedData --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
 //Обновить БД
 //dotnet ef database update --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
-// Обновить БД до миграции (ChangeOrderExternalIdToGuid - название миграции)
-// dotnet ef database update ChangeOrderExternalIdToGuid --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+// Обновить БД до миграции (AddSeedData - название миграции)
+// dotnet ef database update AddSeedData --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
 //Удалить последнюю миграцию
 //dotnet ef migrations remove --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+
+//dotnet ef database drop --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database

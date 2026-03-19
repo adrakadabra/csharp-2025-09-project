@@ -29,6 +29,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontService", "FrontService\FrontService.csproj", "{BEE5106E-82AB-412D-A924-7652489BF1E6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderPickingService", "OrderPickingService", "{DDC02A0F-1DC1-411B-9907-D979739BC7D1}"
+	ProjectSection(SolutionItems) = preProject
+		OrderPickingService\dontPush.json = OrderPickingService\dontPush.json
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{D2A41D59-EE94-4C74-AD9C-12B0B3C1899A}"
 EndProject

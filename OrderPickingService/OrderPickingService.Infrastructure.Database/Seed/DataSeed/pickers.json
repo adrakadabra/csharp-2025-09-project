@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "FirstName": "Иван",
+    "LastName": "Петров",
+    "CreatedAt": "2026-03-19T00:00:00Z",
+    "CreatedBy": "seed",
+    "IsDeleted": false
+  },
+  {
+    "Id": 2,
+    "FirstName": "Мария",
+    "LastName": "Сидорова",
+    "CreatedAt": "2026-03-19T00:00:00Z",
+    "CreatedBy": "seed",
+    "IsDeleted": false
+  },
+  {
+    "Id": 3,
+    "FirstName": "Алексей",
+    "LastName": "Иванов",
+    "CreatedAt": "2026-03-19T00:00:00Z",
+    "CreatedBy": "seed",
+    "IsDeleted": false
+  },
+  {
+    "Id": 4,
+    "FirstName": "Елена",
+    "LastName": "Козлова",
+    "CreatedAt": "2026-03-19T00:00:00Z",
+    "CreatedBy": "seed",
+    "IsDeleted": false
+  },
+  {
+    "Id": 5,
+    "FirstName": "Дмитрий",
+    "LastName": "Смирнов",
+    "CreatedAt": "2026-03-19T00:00:00Z",
+    "CreatedBy": "seed",
+    "IsDeleted": false
+  }
+]

@@ -7,7 +7,7 @@ internal sealed class StorageServiceClient(
 {
     public async Task AssemblyAsync(Guid orderNumber, string article, CancellationToken cancellationToken = default)
     {
-        var url = $"/pickForAssembly?orderNumber={orderNumber}&article={article}";
+        var url = $"/reservationitems/pickForAssembly?orderNumber={orderNumber}&article={article}";
         
         var response = await httpClient.PutAsync(url, null, cancellationToken);
         

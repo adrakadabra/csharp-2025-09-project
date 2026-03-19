@@ -15,7 +15,7 @@ internal static class PickingSessionExtensions
             pickingSessionEntity.PickedItems.Select(item => item.ToPickedItem()).ToList());
     }
     
-    private static Domain.Entities.PickedItem ToPickedItem(this PickedItemEntity pickedItemEntity)
+    public static Domain.Entities.PickedItem ToPickedItem(this PickedItemEntity pickedItemEntity)
     {
         return Domain.Entities.PickedItem.Load(
             pickedItemEntity.Id, 
@@ -40,7 +40,7 @@ internal static class PickingSessionExtensions
             );
     }
     
-    private static PickedItemEntity ToPickedItemEntity(this Domain.Entities.PickedItem pickingSessionEntity)
+    public static PickedItemEntity ToPickedItemEntity(this Domain.Entities.PickedItem pickingSessionEntity)
     {
         return PickedItemEntity.Load(
             pickingSessionEntity.Id, 

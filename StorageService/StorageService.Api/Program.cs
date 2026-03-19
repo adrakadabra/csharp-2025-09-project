@@ -33,7 +33,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             });
     }
     else
-        options.UseNpgsql(builder.Configuration["CONNECTION_STRING"] ?? throw new InvalidProgramException("No connection for data base"));
+    {
+        options.UseNpgsql(builder.Configuration["CONNECTION_STRING"] 
+                          ?? throw new InvalidProgramException("No connection for data base"));
+        
+        options.UseSeeding((contextToSeed, _) => ApplicationDbContext.SeedData(contextToSeed));
+        options.UseAsyncSeeding((contextToSeed, _, _) =>
+        {
+            ApplicationDbContext.SeedData(contextToSeed);
+            return Task.CompletedTask;
+        });
+    }
 });
 
 builder.Services.AddMassTransit(x => {
@@ -110,7 +120,7 @@ app.MapControllers();
 
 app.MapGet("/health", () => Task.FromResult<IResult>(TypedResults.Text("Storage service working")))
     .WithName("CheckHealth")
-    .WithTags("Сервис")
+    .WithTags("пїЅпїЅпїЅпїЅпїЅпїЅ")
     .Produces(200)
     .AllowAnonymous();
 
