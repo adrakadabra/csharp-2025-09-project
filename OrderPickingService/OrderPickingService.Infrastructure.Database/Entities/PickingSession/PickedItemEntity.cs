@@ -2,7 +2,7 @@ using OrderPickingService.Infrastructure.Database.Entities.Order;
 
 namespace OrderPickingService.Infrastructure.Database.Entities.PickingSession;
 
-internal sealed class PickedItemEntity : BaseEntity
+public sealed class PickedItemEntity : BaseEntity
 {
     public long Id { get; set; }
     public long PickingSessionId { get; set; }

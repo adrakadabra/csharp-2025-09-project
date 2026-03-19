@@ -5,7 +5,7 @@ namespace OrderPickingService.Domain.Entities;
 public sealed class Order
 {
     public long Id  { get; }
-    public long ExternalId { get; private set;  } 
+    public Guid ExternalId { get; private set;  } 
     public OrderStatus OrderStatus { get; private set;  }
     public List<OrderItem> Items { get; private set;  }
 
@@ -14,21 +14,21 @@ public sealed class Order
         OrderStatus = OrderStatus.Picking;
     }
     
-    public static Order Create(long externalId, List<OrderItem> items)
+    public static Order Create(Guid externalId, List<OrderItem> items)
     {
         return new Order(0, externalId, OrderStatus.Available, items);
     }
     
     public static Order Load(
         long id, 
-        long externalId, 
+        Guid externalId, 
         OrderStatus orderStatus,
         List<OrderItem> items)
     {
         return new Order(id, externalId, orderStatus, items);
     }
 
-    private Order(long id, long externalId, OrderStatus orderStatus, List<OrderItem> items)
+    private Order(long id, Guid externalId, OrderStatus orderStatus, List<OrderItem> items)
     {
         Id = id;
         ExternalId = externalId;

@@ -1,3 +1,5 @@
+using OrderPickingService.Domain.Entities;
+using OrderPickingService.Domain.Enums;
 using OrderPickingService.Domain.Services.Abstractions;
 using OrderPickingService.Services.Order;
 using OrderPickingService.Services.Picking.Abstractions;
@@ -11,7 +13,8 @@ internal sealed class PickingService(
     IPickerRepository pickerRepository,
     IPickingSessionRepository pickingSessionRepository,
     IPickingProcessor pickingProcessor,
-    IUnitOfWork unitOfWork) : IPickingService
+    IUnitOfWork unitOfWork,
+    IStorageServiceClient storageServiceClient) : IPickingService
 {
     public async Task<CreatedPickingSessionDto> ClaimOrder(
         ClaimOrderDto claimOrderDto,
@@ -50,5 +53,62 @@ internal sealed class PickingService(
             new CreatedPickingSessionDto(
                 pickingSession.Id,
                 order.ToOrderDto().Items); 
+    }
+
+    public async Task<PickItemResultDto> PickItemAsync(PickItemDto dto, CancellationToken cancellationToken)
+    {
+        var pickingSession = await pickingSessionRepository.GetByIdAsync(dto.PickingSessionId, cancellationToken);
+        
+        if(pickingSession == null)
+        {
+            throw new KeyNotFoundException($"Picking session with id = {dto.PickingSessionId} not found");
+        }
+        
+        var order = await orderRepository.GetByIdAsync(pickingSession.OrderId, cancellationToken);
+
+        if(order == null)
+        {
+            throw new KeyNotFoundException($"Order with id = {pickingSession.OrderId} not found");
+        }
+
+        if (pickingSession.PickingStatus != PickingStatus.InProgress)
+            throw new InvalidOperationException("Session not in progress");
+        
+        try
+        {
+            await storageServiceClient.AssemblyAsync(order.ExternalId, dto.Sku, cancellationToken);
+        }
+        catch (HttpRequestException exception)
+        {
+            Console.WriteLine(exception);
+            return new PickItemResultDto(false, $"Ошибка склада: {exception?.Message}", null);
+        }
+        
+        pickingProcessor.PickItem(order, pickingSession, dto.Sku, dto.Note);
+            
+        await pickingSessionRepository.UpdateAsync(pickingSession, cancellationToken);
+        
+        var updatedSession = await pickingSessionRepository.GetByIdAsync(pickingSession.Id, cancellationToken);
+        var savedItem = updatedSession?.PickedItems.Last();
+        
+        return new PickItemResultDto(true, $"Товар добавлен", savedItem?.ToPickedItemDto());
+    }
+
+    public async Task<PickingSessionDto> GetPickingSessionByIdAsync(long id, CancellationToken cancellationToken)
+    {
+        var session = await pickingSessionRepository.GetByIdAsync(id, cancellationToken);
+        
+        if (session == null)
+            throw new KeyNotFoundException($"Session {id} not found");
+    
+        return new PickingSessionDto(
+            session.Id,
+            session.OrderId,
+            session.PickerId,
+            session.StartedAt,
+            session.FinishedAt,
+            session.PickingStatus,
+            session.Notes,
+            session.PickedItems.Select(i => i.ToPickedItemDto()).ToList());
     }
 }

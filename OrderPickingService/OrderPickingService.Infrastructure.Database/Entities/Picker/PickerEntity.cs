@@ -1,6 +1,6 @@
 namespace OrderPickingService.Infrastructure.Database.Entities.Picker;
 
-internal class PickerEntity : BaseEntity
+public class PickerEntity : BaseEntity
 {
     public long Id { get; set; }
     public string FirstName { get; set; } = string.Empty;

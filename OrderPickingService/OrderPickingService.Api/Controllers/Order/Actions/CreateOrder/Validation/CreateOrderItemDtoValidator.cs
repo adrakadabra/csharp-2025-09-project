@@ -8,7 +8,7 @@ public sealed class CreateOrderItemDtoValidator : AbstractValidator<CreateOrderI
     public CreateOrderItemDtoValidator()
     {
         RuleFor(x => x.ProductExternalId)
-            .GreaterThan(0);
+            .NotEmpty();
         
         RuleFor(x => x.ProductSku)
             .NotEmpty();

@@ -1,5 +1,5 @@
 namespace OrderPickingService.Services.Order.Dtos;
 
 public record CreateOrderDto(
-    long ExternalId,
+    Guid ExternalId,
     List<CreateOrderItemDto> Items);

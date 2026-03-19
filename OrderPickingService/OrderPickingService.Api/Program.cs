@@ -1,17 +1,19 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using OrderPickingService.Api.Services;
 using OrderPickingService.Infrastructure.Database;
+using OrderPickingService.Infrastructure.ExternalServices;
 using OrderPickingService.Services;
 
 namespace OrderPickingService.Api;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         var services = builder.Services;
@@ -63,10 +65,17 @@ public class Program
             .AddAuthorization()
             .AddDatabase(builder.Configuration)
             .AddDomainServices()
+            .AddStorageHttpClient(builder.Configuration)
             .AddValidatorsFromAssembly(typeof(Program).Assembly)
             ;
         
         var app = builder.Build();
+        
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            await dbContext.Database.MigrateAsync();  
+        }
         
         if (app.Environment.IsDevelopment())
         {
@@ -87,6 +96,6 @@ public class Program
 
         app.MapControllers();
 
-        app.Run();
+        await app.RunAsync();
     }
 }

@@ -1,7 +1,7 @@
 namespace OrderPickingService.Services.Order.Dtos;
 
 public record CreateOrderItemDto(
-    long ProductExternalId,
+    Guid ProductExternalId,
     string ProductSku,
     string ProductName,
     long Quantity,

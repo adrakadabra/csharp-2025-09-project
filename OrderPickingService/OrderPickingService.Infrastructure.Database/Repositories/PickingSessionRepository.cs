@@ -11,6 +11,7 @@ internal sealed class PickingSessionRepository(DatabaseContext databaseContext) 
     public async Task<PickingSession?> GetByIdAsync(long id, CancellationToken cancellationToken)
     {
         var foundSession = await databaseContext.PickingSessions
+            .Include(s => s.PickedItems)
             .AsNoTracking()
             .FirstOrDefaultAsync(session => session.Id == id, cancellationToken);
 
@@ -28,7 +29,9 @@ internal sealed class PickingSessionRepository(DatabaseContext databaseContext) 
 
     public async Task UpdateAsync(PickingSession session, CancellationToken cancellationToken)
     {
-        var entity = await databaseContext.PickingSessions.FindAsync([session.Id], cancellationToken: cancellationToken);
+        var entity = await databaseContext.PickingSessions
+                .Include(s => s.PickedItems)
+                .FirstOrDefaultAsync(s => s.Id == session.Id, cancellationToken);
         
         if(entity == null)
             throw new KeyNotFoundException($"Session with id {session.Id} not found in database");
@@ -38,5 +41,13 @@ internal sealed class PickingSessionRepository(DatabaseContext databaseContext) 
         entity.Notes = session.Notes;
         entity.UpdatedAt = DateTime.UtcNow;
         entity.UpdatedBy = "system";
+
+        var newItems = session.PickedItems
+            .Where(item => item.Id == 0)
+            .Select(item => item.ToPickedItemEntity());
+        
+        entity.PickedItems.AddRange(newItems);
+        
+        await databaseContext.SaveChangesAsync(cancellationToken);
     }
 }

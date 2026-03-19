@@ -4,10 +4,10 @@ using OrderPickingService.Infrastructure.Database.Entities.PickingSession;
 
 namespace OrderPickingService.Infrastructure.Database.Entities.Order;
 
-internal sealed class OrderEntity : BaseEntity
+public sealed class OrderEntity : BaseEntity
 {
     public long Id { get; set; }
-    public long ExternalId { get; set; }
+    public Guid ExternalId { get; set; }
     
     [Column(TypeName = "order_status")]
     public OrderStatus OrderStatus { get; set; }
@@ -20,7 +20,7 @@ internal sealed class OrderEntity : BaseEntity
         PickingSessions = new List<PickingSessionEntity>();
     }
 
-    public static OrderEntity Create(long externalId, List<OrderItemEntity> orderItems)
+    public static OrderEntity Create(Guid externalId, List<OrderItemEntity> orderItems)
     {
         return new OrderEntity()
         {

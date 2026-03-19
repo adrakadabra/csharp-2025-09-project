@@ -6,10 +6,11 @@ using OrderPickingService.Infrastructure.Database.Entities;
 using OrderPickingService.Infrastructure.Database.Entities.Order;
 using OrderPickingService.Infrastructure.Database.Entities.Picker;
 using OrderPickingService.Infrastructure.Database.Entities.PickingSession;
+using OrderPickingService.Infrastructure.Database.Seed;
 
 namespace OrderPickingService.Infrastructure.Database;
 
-internal sealed class DatabaseContext : DbContext
+public sealed class DatabaseContext : DbContext
 {
     public DatabaseContext(DbContextOptions<DatabaseContext> options)
         : base(options)
@@ -178,16 +179,20 @@ internal sealed class DatabaseContext : DbContext
                 
                 pickedItemEntity.HasIndex(pickedItem => pickedItem.OrderItemId);
             });
+        
+            new DataSeeder().Seed(modelBuilder);
     }
 }
-//Сгенерировать миграцию (AddOrderTables - название миграции)
-//dotnet ef migrations add AddOrderTables --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+//Сгенерировать миграцию (AddSeedData - название миграции)
+//dotnet ef migrations add AddSeedData --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
 //Обновить БД
 //dotnet ef database update --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
-// Обновить БД до миграции (AddOrderTables - название миграции)
-// dotnet ef database update AddOrderTables --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+// Обновить БД до миграции (AddSeedData - название миграции)
+// dotnet ef database update AddSeedData --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
 //Удалить последнюю миграцию
 //dotnet ef migrations remove --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+
+//dotnet ef database drop --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database
