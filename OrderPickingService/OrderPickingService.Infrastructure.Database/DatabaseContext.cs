@@ -82,6 +82,9 @@ public sealed class DatabaseContext : DbContext
                 
                 orderEntity.Property(order => order.ExternalId)
                     .IsRequired();
+                                
+                orderEntity.Property(order => order.UserId)
+                    .IsRequired();
                 
                 orderEntity.Property(order => order.OrderStatus)
                     .IsRequired();
@@ -183,14 +186,14 @@ public sealed class DatabaseContext : DbContext
             new DataSeeder().Seed(modelBuilder);
     }
 }
-//Сгенерировать миграцию (AddSeedData - название миграции)
-//dotnet ef migrations add AddSeedData --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+//Сгенерировать миграцию (AddUserId - название миграции)
+//dotnet ef migrations add AddUserId --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
 //Обновить БД
 //dotnet ef database update --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
-// Обновить БД до миграции (AddSeedData - название миграции)
-// dotnet ef database update AddSeedData --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+// Обновить БД до миграции (AddUserId - название миграции)
+// dotnet ef database update AddUserId --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
 //Удалить последнюю миграцию
 //dotnet ef migrations remove --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext

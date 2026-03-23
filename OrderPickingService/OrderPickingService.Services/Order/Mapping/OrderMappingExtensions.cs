@@ -8,7 +8,8 @@ internal static class OrderMappingExtensions
     public static Domain.Entities.Order ToOrder(this CreateOrderDto dto)
     {
         return Domain.Entities.Order.Create(
-            dto.ExternalId,
+            dto.OrderNumber,
+            dto.UserId,
             dto.Items.Select(i => i.ToOrderItem()).ToList()
             );
     }
@@ -18,6 +19,7 @@ internal static class OrderMappingExtensions
         return OrderDto.Load(
             order.Id, 
             order.ExternalId, 
+            order.UserId,
             order.OrderStatus, 
             order.Items.Select(i => i.ToOrderItemDto()).ToList());
     }

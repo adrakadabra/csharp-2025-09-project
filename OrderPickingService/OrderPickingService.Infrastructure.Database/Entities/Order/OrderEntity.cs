@@ -8,6 +8,7 @@ public sealed class OrderEntity : BaseEntity
 {
     public long Id { get; set; }
     public Guid ExternalId { get; set; }
+    public string UserId { get; set; }
     
     [Column(TypeName = "order_status")]
     public OrderStatus OrderStatus { get; set; }
@@ -20,11 +21,12 @@ public sealed class OrderEntity : BaseEntity
         PickingSessions = new List<PickingSessionEntity>();
     }
 
-    public static OrderEntity Create(Guid externalId, List<OrderItemEntity> orderItems)
+    public static OrderEntity Create(Guid externalId, string userId, List<OrderItemEntity> orderItems)
     {
         return new OrderEntity()
         {
             ExternalId = externalId,
+            UserId = userId,
             OrderStatus = OrderStatus.Available,
             OrderItems = orderItems
         };

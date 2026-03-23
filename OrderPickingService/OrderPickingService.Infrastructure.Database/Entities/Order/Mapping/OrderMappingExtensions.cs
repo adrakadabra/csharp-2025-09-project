@@ -6,7 +6,10 @@ internal static class OrderMappingExtensions
 {
     public static OrderEntity ToOrderEntity(this Domain.Entities.Order order)
     {
-        return OrderEntity.Create(order.ExternalId, order.Items.Select(item => item.ToOrderItemEntity()).ToList());
+        return OrderEntity.Create(
+            order.ExternalId, 
+            order.UserId, 
+            order.Items.Select(item => item.ToOrderItemEntity()).ToList());
     }
     
     public static Domain.Entities.Order ToOrder(this OrderEntity order)
@@ -14,6 +17,7 @@ internal static class OrderMappingExtensions
         return Domain.Entities.Order.Load(
             order.Id,
             order.ExternalId,
+            order.UserId,
             order.OrderStatus,
             order.OrderItems.Select(item => item.ToOrderItem()).ToList());
     }

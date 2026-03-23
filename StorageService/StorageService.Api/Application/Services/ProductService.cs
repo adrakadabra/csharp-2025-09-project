@@ -191,7 +191,11 @@ namespace StorageService.Api.Application.Services
             {
                 Id = p.Id,
                 Name = p.Name,
-                Quantity = p.Quantity
+                Quantity = p.Quantity,
+                AvailableQuantity = p.AvailableQuantity,
+                Article =  p.Article,
+                Price = p.Price,
+                CategoryName = p.Category.Name
             }).ToList();
         }
 

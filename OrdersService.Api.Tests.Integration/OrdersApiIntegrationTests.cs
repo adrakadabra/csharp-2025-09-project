@@ -69,7 +69,7 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new AssemblyOrderResponse
             {
-                Id = Guid.NewGuid()
+                Id = 0
             });
 
         _factory.PublisherMock
@@ -96,7 +96,7 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
         dto.Should().NotBeNull();
         dto!.Id.Should().BeGreaterThan(0);
         dto.OrderNumber.Should().NotBeEmpty();
-        dto.UserId.Should().Be("test-user-1");
+        dto.UserId.Should().Be("test-user-id");
         dto.Items.Should().HaveCount(1);
         dto.Items[0].ProductId.Should().Be(productId);
         dto.Items[0].Quantity.Should().Be(2);
@@ -150,7 +150,7 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new AssemblyOrderResponse
             {
-                Id = Guid.NewGuid()
+                Id = 0
             });
 
         _factory.PublisherMock
@@ -178,7 +178,7 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
         var orders = await getResponse.Content.ReadFromJsonAsync<List<OrderDto>>();
         orders.Should().NotBeNull();
         orders.Should().NotBeEmpty();
-        orders!.Should().OnlyContain(x => x.UserId == "test-user-1");
+        orders!.Should().OnlyContain(x => x.UserId == "test-user-id");
     }
 
     [Fact]
@@ -264,7 +264,7 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new AssemblyOrderResponse
             {
-                Id = Guid.NewGuid()
+                Id = 0
             });
 
         _factory.PublisherMock
