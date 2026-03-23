@@ -107,7 +107,7 @@ public class OrdersServiceTests
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new AssemblyOrderResponse
             {
-                Id = Guid.NewGuid()
+                Id = 0
             });
 
         _publisherMock
@@ -160,11 +160,10 @@ public class OrdersServiceTests
 
         _orderPickingClientMock.Verify(x => x.CreateOrderAsync(
             It.Is<CreateAssemblyOrderRequest>(r =>
-                r.OrderId == 123 &&
                 r.OrderNumber == addedOrder!.OrderNumber &&
                 r.UserId == "user-123" &&
                 r.Items.Count == 1 &&
-                r.Items[0].Article == "AUTO-0001" &&
+                r.Items[0].ProductSku == "AUTO-0001" &&
                 r.Items[0].Quantity == 1),
             "jwt-token",
             It.IsAny<CancellationToken>()), Times.Once);

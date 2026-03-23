@@ -92,7 +92,9 @@ public class OrdersServicee : IOrdersService
             var warehouseProduct = products.First(x => x.Id == requestedItem.ProductId);
 
             if (warehouseProduct.AvailableQuantity < requestedItem.Quantity)
-                throw new InvalidOperationException($"Недостаточно остатка на складе по товару {requestedItem.ProductId}");
+                throw new InvalidOperationException($"Недостаточно остатка на складе по товару {requestedItem.ProductId}. " +
+                                                    $"Доступное количество {warehouseProduct.AvailableQuantity}. " +
+                                                    $"Запрашиваемое количество {requestedItem.Quantity}");
         }
 
         var orderNumber = Guid.NewGuid();
@@ -140,7 +142,6 @@ public class OrdersServicee : IOrdersService
         {
             var pickingRequest = new CreateAssemblyOrderRequest
             {
-                OrderId = order.Id,
                 OrderNumber = order.OrderNumber,
                 UserId = order.UserId,
                 Items = groupedItems.Select(x =>
@@ -149,8 +150,12 @@ public class OrdersServicee : IOrdersService
 
                     return new CreateAssemblyOrderItemRequest
                     {
-                        Article = product.Article,
-                        Quantity = x.Quantity
+                        ProductExternalId = product.Id,
+                        ProductSku = product.Article,
+                        ProductName = product.Name,
+                        Quantity = x.Quantity,
+                        Price = product.Price,
+                        Category = product.CategoryName
                     };
                 }).ToList()
             };
@@ -172,18 +177,18 @@ public class OrdersServicee : IOrdersService
             throw;
         }
 
-        var message = new PickOrderMessage
-        {
-            OrderId = order.Id,
-            UserId = order.UserId,
-            Items = order.Items.Select(i => new PickOrderItemMessage
-            {
-                ProductId = i.ProductId,
-                Quantity = i.Quantity
-            }).ToList()
-        };
-
-        await _orderMessagePublisher.SendPickOrderAsync(message, cancellationToken);
+        // var message = new PickOrderMessage
+        // {
+        //     OrderId = order.Id,
+        //     UserId = order.UserId,
+        //     Items = order.Items.Select(i => new PickOrderItemMessage
+        //     {
+        //         ProductId = i.ProductId,
+        //         Quantity = i.Quantity
+        //     }).ToList()
+        // };
+        //
+        // await _orderMessagePublisher.SendPickOrderAsync(message, cancellationToken);
 
         return order.ToDto();
     }

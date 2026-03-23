@@ -29,8 +29,9 @@ public class OrderPickingClient : IOrderPickingClient
 
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
-
+        
         using var response = await _httpClient.SendAsync(request, cancellationToken);
+        
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<AssemblyOrderResponse>(cancellationToken: cancellationToken);

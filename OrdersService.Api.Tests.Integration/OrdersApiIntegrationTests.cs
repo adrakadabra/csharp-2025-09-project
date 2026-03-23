@@ -69,7 +69,7 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new AssemblyOrderResponse
             {
-                Id = Guid.NewGuid()
+                Id = 0
             });
 
         _factory.PublisherMock
@@ -150,7 +150,7 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new AssemblyOrderResponse
             {
-                Id = Guid.NewGuid()
+                Id = 0
             });
 
         _factory.PublisherMock
@@ -264,7 +264,7 @@ public class OrdersApiIntegrationTests : IClassFixture<TestWebApplicationFactory
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new AssemblyOrderResponse
             {
-                Id = Guid.NewGuid()
+                Id = 0
             });
 
         _factory.PublisherMock
