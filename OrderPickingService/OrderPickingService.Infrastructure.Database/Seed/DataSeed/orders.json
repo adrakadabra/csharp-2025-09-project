@@ -2,6 +2,7 @@
     {
       "Id": 1,
       "ExternalId": "11111111-1111-1111-1111-111111111111",
+      "UserId": "test-user-id-123",
       "OrderStatus": 1,
       "CreatedAt": "2026-03-19T00:00:00Z",
       "CreatedBy": "seed",
@@ -36,6 +37,7 @@
     {
       "Id": 2,
       "ExternalId": "22222222-2222-2222-2222-222222222222",
+      "UserId": "test-user-id-123",
       "OrderStatus": 1,
       "CreatedAt": "2026-03-19T00:00:00Z",
       "CreatedBy": "seed",
@@ -82,6 +84,7 @@
     {
       "Id": 3,
       "ExternalId": "33333333-3333-3333-3333-333333333333",
+      "UserId": "test-user-id-123",
       "OrderStatus": 1,
       "CreatedAt": "2026-03-19T00:00:00Z",
       "CreatedBy": "seed",
@@ -116,6 +119,7 @@
     {
       "Id": 4,
       "ExternalId": "44444444-4444-4444-4444-444444444444",
+      "UserId": "test-user-id-123",
       "OrderStatus": 1,
       "CreatedAt": "2026-03-19T00:00:00Z",
       "CreatedBy": "seed",
@@ -162,6 +166,7 @@
     {
       "Id": 5,
       "ExternalId": "55555555-5555-5555-5555-555555555555",
+      "UserId": "test-user-id-123",
       "OrderStatus": 1,
       "CreatedAt": "2026-03-19T00:00:00Z",
       "CreatedBy": "seed",
@@ -196,6 +201,7 @@
     {
       "Id": 6,
       "ExternalId": "66666666-6666-6666-6666-666666666666",
+      "UserId": "test-user-id-123",
       "OrderStatus": 1,
       "CreatedAt": "2026-03-19T00:00:00Z",
       "CreatedBy": "seed",
@@ -230,6 +236,7 @@
     {
       "Id": 7,
       "ExternalId": "77777777-7777-7777-7777-777777777777",
+      "UserId": "test-user-id-123",
       "OrderStatus": 1,
       "CreatedAt": "2026-03-19T00:00:00Z",
       "CreatedBy": "seed",
@@ -264,6 +271,7 @@
     {
       "Id": 8,
       "ExternalId": "88888888-8888-8888-8888-888888888888",
+      "UserId": "test-user-id-123",
       "OrderStatus": 1,
       "CreatedAt": "2026-03-19T00:00:00Z",
       "CreatedBy": "seed",
@@ -298,6 +306,7 @@
     {
       "Id": 9,
       "ExternalId": "99999999-9999-9999-9999-999999999999",
+      "UserId": "test-user-id-123",
       "OrderStatus": 1,
       "CreatedAt": "2026-03-19T00:00:00Z",
       "CreatedBy": "seed",
@@ -332,6 +341,7 @@
     {
       "Id": 10,
       "ExternalId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "UserId": "test-user-id-123",
       "OrderStatus": 1,
       "CreatedAt": "2026-03-19T00:00:00Z",
       "CreatedBy": "seed",

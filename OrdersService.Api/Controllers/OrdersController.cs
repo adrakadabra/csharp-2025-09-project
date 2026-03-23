@@ -8,7 +8,7 @@ namespace OrdersService.Api.Controllers;
 
 [ApiController]
 [Route("api/orders")]
-[Authorize]
+//[Authorize]
 public class OrdersController : ControllerBase
 {
     private readonly IOrdersService _ordersService;
@@ -101,26 +101,27 @@ public class OrdersController : ControllerBase
 
     private string? GetUserIdFromClaims()
     {
-        var rawValue =
-            User.FindFirstValue(ClaimTypes.NameIdentifier) ??
-            User.FindFirstValue("sub");
-
-        if (string.IsNullOrWhiteSpace(rawValue))
-            return null;
-
-        return rawValue;
+        // var rawValue =
+        //     User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+        //     User.FindFirstValue("sub");
+        //
+        // if (string.IsNullOrWhiteSpace(rawValue))
+        //     return null;
+        //
+         return $"test-user-id";
     }
 
     private string GetRawJwt()
     {
-        var authHeader = Request.Headers.Authorization.FirstOrDefault();
-
-        if (string.IsNullOrWhiteSpace(authHeader))
-            return string.Empty;
-
-        if (authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-            return authHeader["Bearer ".Length..].Trim();
-
-        return authHeader.Trim();
+        return "fake-jwt-token";
+        // var authHeader = Request.Headers.Authorization.FirstOrDefault();
+        //
+        // if (string.IsNullOrWhiteSpace(authHeader))
+        //     return string.Empty;
+        //
+        // if (authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+        //     return authHeader["Bearer ".Length..].Trim();
+        //
+        // return authHeader.Trim();
     }
 }

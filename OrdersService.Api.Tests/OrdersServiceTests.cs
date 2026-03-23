@@ -164,7 +164,7 @@ public class OrdersServiceTests
                 r.OrderNumber == addedOrder!.OrderNumber &&
                 r.UserId == "user-123" &&
                 r.Items.Count == 1 &&
-                r.Items[0].Article == "AUTO-0001" &&
+                r.Items[0].ProductSku == "AUTO-0001" &&
                 r.Items[0].Quantity == 1),
             "jwt-token",
             It.IsAny<CancellationToken>()), Times.Once);
