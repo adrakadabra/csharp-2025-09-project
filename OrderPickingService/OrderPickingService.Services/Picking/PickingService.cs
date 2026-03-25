@@ -1,6 +1,8 @@
 using OrderPickingService.Domain.Entities;
 using OrderPickingService.Domain.Enums;
+using OrderPickingService.Domain.Events;
 using OrderPickingService.Domain.Services.Abstractions;
+using OrderPickingService.Services.Messages;
 using OrderPickingService.Services.Order;
 using OrderPickingService.Services.Picking.Abstractions;
 using OrderPickingService.Services.Picking.Dtos;
@@ -14,7 +16,8 @@ internal sealed class PickingService(
     IPickingSessionRepository pickingSessionRepository,
     IPickingProcessor pickingProcessor,
     IUnitOfWork unitOfWork,
-    IStorageServiceClient storageServiceClient) : IPickingService
+    IStorageServiceClient storageServiceClient,
+    IMessagePublisher messagePublisher) : IPickingService
 {
     public async Task<CreatedPickingSessionDto> ClaimOrder(
         ClaimOrderDto claimOrderDto,
@@ -110,5 +113,76 @@ internal sealed class PickingService(
             session.PickingStatus,
             session.Notes,
             session.PickedItems.Select(i => i.ToPickedItemDto()).ToList());
+    }
+
+    public async Task<PickingSessionDto> CompletePickingSessionAsync(
+        CompletePickingSessionDto dto,
+        CancellationToken cancellationToken)
+    {
+        var pickingSession = await pickingSessionRepository.GetByIdAsync(dto.PickingSessionId, cancellationToken);
+        var order = await orderRepository.GetByIdAsync(pickingSession.OrderId, cancellationToken);
+
+        if(order == null)
+        {
+            throw new KeyNotFoundException($"Order with id = {pickingSession.OrderId} not found. Message no sended");
+        }
+        if(pickingSession == null)
+        {
+            throw new KeyNotFoundException($"Picking session with id = {dto.PickingSessionId} not found");
+        }
+        
+        pickingProcessor.CompletePickingSession(pickingSession, order, dto.Note);
+        
+        try
+        {
+            await unitOfWork.BeginTransactionAsync(cancellationToken);
+            await pickingSessionRepository.UpdateAsync(pickingSession, cancellationToken);
+            await orderRepository.UpdateAsync(order, cancellationToken);
+            await unitOfWork.CommitTransactionAsync(cancellationToken);
+        }
+        catch (Exception)
+        {
+            await unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
+        
+        var testEvent = new PickingCompletedEvent(
+            OrderId: order.Id,
+            PickingId: pickingSession.Id,
+            ExternalOrderId: order.ExternalId,
+            UserId: order.UserId,
+            StartedAt: pickingSession.StartedAt,
+            FinishedAt: pickingSession.FinishedAt,
+            PickingStatus: pickingSession.PickingStatus.ToString(),
+            Notes: pickingSession.Notes,
+            Items: pickingSession.PickedItems
+                .Join(order.Items,
+                    pickedItem => pickedItem.OrderItemId,
+                    item => item.Id,
+                    (pickedItem, orderItem) => new PickingResultItem(
+                        OrderItemId: orderItem.Id,
+                        ProductExternalId: orderItem.ProductExternalId,
+                        ProductSku: orderItem.ProductSku,
+                        ProductName: orderItem.ProductName,
+                        ExpectedQuantity: orderItem.Quantity,
+                        ActualQuantity: 1,
+                        Notes: pickedItem.Note
+                    ))
+                .GroupBy(result => new {result.OrderItemId, result.ProductExternalId, result.ProductSku, result.ProductName, result.ExpectedQuantity})
+                .Select(groupedResult => new PickingResultItem(
+                    OrderItemId: groupedResult.Key.OrderItemId,
+                    ProductExternalId: groupedResult.Key.ProductExternalId,
+                    ProductSku: groupedResult.Key.ProductSku,
+                    ProductName: groupedResult.Key.ProductName,
+                    ExpectedQuantity: groupedResult.Key.ExpectedQuantity,
+                    ActualQuantity: groupedResult.Sum(result => result.ActualQuantity),
+                    Notes: string.Join("; ", groupedResult.Select(gr => gr.Notes).Where(gr => !string.IsNullOrEmpty(gr)))
+                ))
+                .ToList()
+            );
+            
+        await messagePublisher.PublishAsync(testEvent, cancellationToken);
+        
+        return pickingSession.ToPickingSessionDto();
     }
 }

@@ -67,6 +67,7 @@ public class Program
             .AddDomainServices()
             .AddStorageHttpClient(builder.Configuration)
             .AddValidatorsFromAssembly(typeof(Program).Assembly)
+            .AddRabbitMq(builder.Configuration);
             ;
         
         var app = builder.Build();

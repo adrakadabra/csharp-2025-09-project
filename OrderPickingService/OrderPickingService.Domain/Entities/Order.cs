@@ -39,4 +39,9 @@ public sealed class Order
         Items = items;
         UserId = userId;
     }
+
+    public void Complete()
+    {
+        OrderStatus = OrderStatus.Picked;
+    }
 }
