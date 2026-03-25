@@ -98,6 +98,7 @@ services:
       RMQ_PORT: 5672
       RMQ_USER: guest
       RMQ_PASSWORD: guest
+      RMQ_PICKING_COMPLETED_QUEUE: picking-completed-queue
       STORAGE_SERVICE_URL: http://storage-service:8080
       ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_URLS: http://+:8080

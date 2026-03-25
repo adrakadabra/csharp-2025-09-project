@@ -40,4 +40,19 @@ public sealed class PickingProcessor : IPickingProcessor
     
         return pickedItem;
     }
+
+    public void CompletePickingSession(PickingSession session, Order order, string? notes)
+    {
+        if (session.PickingStatus != PickingStatus.InProgress)
+            throw new InvalidOperationException("Session is not in progress");
+        
+        if(session.PickedItems.Count == 0)
+            throw new InvalidOperationException("Cannot complete picking session: no items have been picked");
+        
+        if(order.OrderStatus != OrderStatus.Picking)
+            throw new InvalidOperationException("Order is not picking");
+        
+        session.Complete(notes);
+        order.Complete();
+    }
 }

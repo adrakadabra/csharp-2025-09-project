@@ -8,9 +8,14 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OrderPickingService.Services.Repositories.Abstractions\OrderPickingService.Services.Repositories.Abstractions.csproj" />
+      <ProjectReference Include="..\OrderPickingService.Services\OrderPickingService.Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="MassTransit" Version="8.5.7" />
+      <PackageReference Include="MassTransit.Abstractions" Version="8.5.7" />
+      <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.7" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.11" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.3" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />

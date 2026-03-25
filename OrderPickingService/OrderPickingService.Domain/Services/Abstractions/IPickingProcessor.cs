@@ -6,4 +6,5 @@ public interface IPickingProcessor
 {
     PickingSession StartPicking(Order order, Picker picker);
     PickedItem PickItem(Order order, PickingSession session, string sku, string? note);
+    void CompletePickingSession(PickingSession session, Order order, string? note);
 }

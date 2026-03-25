@@ -71,6 +71,43 @@ public sealed class PickingSessionController(IPickingService pickingService) : C
         }
     }
     
+    [HttpPost("CompletePickingSession")]
+    [ProducesResponseType(typeof(PickingSessionDto),StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CompletePickingSession(
+        CompletePickingSessionDto completePickingSessionDto,
+        [FromServices] IValidator<CompletePickingSessionDto> validator,
+        CancellationToken cancellationToken)
+    {
+        var validationResult = await validator.ValidateAsync(completePickingSessionDto, cancellationToken);
+        
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.GetErrors());
+        }
+        
+        try
+        {
+            var result = await pickingService.CompletePickingSessionAsync(completePickingSessionDto, cancellationToken);
+            
+            return StatusCode(StatusCodes.Status200OK, result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e); //TODO: add logging
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+    
     [HttpGet("GetPickingSessionById")]
     [ProducesResponseType(typeof(PickingSessionDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

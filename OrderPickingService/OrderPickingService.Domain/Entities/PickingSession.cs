@@ -44,10 +44,11 @@ public sealed class PickingSession
         PickedItems.Add(pickedItem);
     }
 
-    public void Complete()
+    public void Complete(string? notes)
     {
         FinishedAt = DateTime.UtcNow;
         PickingStatus = PickingStatus.Completed;
+        Notes = notes;
     }
 
     public void Cancel(string reason)
