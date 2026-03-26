@@ -6,6 +6,7 @@ namespace OrderPickingService.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[ApiExplorerSettings(IgnoreApi = true)]
 public sealed class TestController : ControllerBase
 {
     [HttpGet]

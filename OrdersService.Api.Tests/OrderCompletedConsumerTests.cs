@@ -1,7 +1,9 @@
-﻿using MassTransit;
+﻿using Common.Messages.PickingCompleted;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
 using OrdersService.Api.Application.Interfaces;
+using OrdersService.Api.Domain.Entities;
 using OrdersService.Api.Domain.Enums;
 using OrdersService.Api.Infrastructure.Messaging.Consumers;
 using OrdersService.Api.Infrastructure.Messaging.Messages;
@@ -13,7 +15,7 @@ namespace OrdersService.Api.Tests.Unit.Messaging;
 public class OrderCompletedConsumerTests
 {
     private readonly Mock<IOrdersService> _ordersServiceMock = new();
-    private readonly Mock<ILogger<OrderCompletedConsumer>> _loggerMock = new();
+    private readonly Mock<ILogger<PickingCompletedMessage>> _loggerMock = new();
 
     private OrderCompletedConsumer CreateConsumer()
     {
@@ -24,21 +26,28 @@ public class OrderCompletedConsumerTests
     public async Task Consume_Should_Set_Order_Status_To_Completed_When_Order_Exists()
     {
         // Arrange
-        var message = new OrderCompletedMessage
-        {
-            OrderId = 15,
-            CompletedAt = new DateTime(2026, 3, 8, 21, 0, 0, DateTimeKind.Utc)
-        };
+        var message = new PickingCompletedMessage
+        (
+            OrderId: 15,
+            PickingId: 10,
+            ExternalOrderId: Guid.NewGuid(),
+            UserId: "test-user",
+            StartedAt: DateTime.UtcNow,
+            FinishedAt: new DateTime(2026, 3, 8, 21, 0, 0, DateTimeKind.Utc),
+            PickingStatus: "Completed",
+            Notes: "test-notes",
+            Items: new List<PickingResultItem>()
+        );
 
-        var contextMock = new Mock<ConsumeContext<OrderCompletedMessage>>();
+        var contextMock = new Mock<ConsumeContext<PickingCompletedMessage>>();
         contextMock.SetupGet(x => x.Message).Returns(message);
         contextMock.SetupGet(x => x.CancellationToken).Returns(CancellationToken.None);
 
         _ordersServiceMock
             .Setup(x => x.SetStatusAsync(
-                15,
+                message.ExternalOrderId,
                 OrderStatus.Completed,
-                message.CompletedAt,
+                message.FinishedAt,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
@@ -49,9 +58,9 @@ public class OrderCompletedConsumerTests
 
         // Assert
         _ordersServiceMock.Verify(x => x.SetStatusAsync(
-            15,
+            message.ExternalOrderId,
             OrderStatus.Completed,
-            message.CompletedAt,
+            message.FinishedAt,
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -59,21 +68,28 @@ public class OrderCompletedConsumerTests
     public async Task Consume_Should_Log_Warning_When_Order_Not_Found()
     {
         // Arrange
-        var message = new OrderCompletedMessage
-        {
-            OrderId = 99,
-            CompletedAt = DateTime.UtcNow
-        };
+        var message = new PickingCompletedMessage
+        (
+            OrderId: 99,
+            PickingId: 10,
+            ExternalOrderId: Guid.NewGuid(),
+            UserId: "test-user",
+            StartedAt: DateTime.UtcNow,
+            FinishedAt: DateTime.UtcNow,
+            PickingStatus: "Completed",
+            Notes: "test-notes",
+            Items: new List<PickingResultItem>()
+        );
 
-        var contextMock = new Mock<ConsumeContext<OrderCompletedMessage>>();
+        var contextMock = new Mock<ConsumeContext<PickingCompletedMessage>>();
         contextMock.SetupGet(x => x.Message).Returns(message);
         contextMock.SetupGet(x => x.CancellationToken).Returns(CancellationToken.None);
 
         _ordersServiceMock
             .Setup(x => x.SetStatusAsync(
-                99,
+                message.ExternalOrderId,
                 OrderStatus.Completed,
-                message.CompletedAt,
+                message.FinishedAt,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
@@ -84,9 +100,9 @@ public class OrderCompletedConsumerTests
 
         // Assert
         _ordersServiceMock.Verify(x => x.SetStatusAsync(
-            99,
+            message.ExternalOrderId,
             OrderStatus.Completed,
-            message.CompletedAt,
+            message.FinishedAt,
             It.IsAny<CancellationToken>()), Times.Once);
 
         _loggerMock.VerifyLog(

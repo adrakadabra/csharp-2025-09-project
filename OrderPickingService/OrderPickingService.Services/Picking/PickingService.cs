@@ -120,15 +120,17 @@ internal sealed class PickingService(
         CancellationToken cancellationToken)
     {
         var pickingSession = await pickingSessionRepository.GetByIdAsync(dto.PickingSessionId, cancellationToken);
+
+        if(pickingSession == null)
+        {
+            throw new KeyNotFoundException($"Picking session with id = {dto.PickingSessionId} not found");
+        }
+        
         var order = await orderRepository.GetByIdAsync(pickingSession.OrderId, cancellationToken);
 
         if(order == null)
         {
             throw new KeyNotFoundException($"Order with id = {pickingSession.OrderId} not found. Message no sended");
-        }
-        if(pickingSession == null)
-        {
-            throw new KeyNotFoundException($"Picking session with id = {dto.PickingSessionId} not found");
         }
         
         pickingProcessor.CompletePickingSession(pickingSession, order, dto.Note);
@@ -146,7 +148,7 @@ internal sealed class PickingService(
             throw;
         }
         
-        var testEvent = new PickingCompletedEvent(
+        var pickingCompletedEvent = new PickingCompletedEvent(
             OrderId: order.Id,
             PickingId: pickingSession.Id,
             ExternalOrderId: order.ExternalId,
@@ -180,8 +182,8 @@ internal sealed class PickingService(
                 ))
                 .ToList()
             );
-            
-        await messagePublisher.PublishAsync(testEvent, cancellationToken);
+        
+        await messagePublisher.PublishAsync(pickingCompletedEvent.ToPickingCompletedMessage(), cancellationToken);
         
         return pickingSession.ToPickingSessionDto();
     }

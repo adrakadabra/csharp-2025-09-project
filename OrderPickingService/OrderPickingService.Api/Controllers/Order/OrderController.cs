@@ -37,4 +37,24 @@ public sealed class OrderController(IOrderService orderService) : ControllerBase
             return StatusCode(StatusCodes.Status400BadRequest, e.Message);
         }
     }
+    
+    [HttpGet("GetOrderByExternalId")]
+    [ProducesResponseType(typeof(CreateOrderDto),StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetOrderByExternalId(
+        Guid externalOrderId, 
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await orderService.GetOrderByExternalId(externalOrderId, cancellationToken);
+
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e); //TODO: add logging
+            return StatusCode(StatusCodes.Status400BadRequest, e.Message);
+        }
+    }
 }

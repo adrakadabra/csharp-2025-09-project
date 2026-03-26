@@ -232,6 +232,29 @@ public class OrdersServicee : IOrdersService
         await _repository.SaveChangesAsync(cancellationToken);
         return true;
     }
+    
+    public async Task<bool> SetStatusAsync(
+        Guid orderNumber,
+        OrderStatus newStatus,
+        DateTime? completedAt = null,
+        CancellationToken cancellationToken = default)
+    {
+        var order = await _repository.GetByOrderNumberAsync(orderNumber, cancellationToken);
+
+        if (order is null)
+            return false;
+
+        order.Status = newStatus;
+        order.UpdatedAt = DateTime.UtcNow;
+
+        if (newStatus == OrderStatus.Completed)
+        {
+            order.CompletedAt = completedAt ?? DateTime.UtcNow;
+        }
+
+        await _repository.SaveChangesAsync(cancellationToken);
+        return true;
+    }
 
     public async Task<bool> CancelOrderAsync(
     int orderId,

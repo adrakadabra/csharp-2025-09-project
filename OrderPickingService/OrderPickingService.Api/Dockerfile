@@ -14,9 +14,9 @@ COPY OrderPickingService/OrderPickingService.Domain/ OrderPickingService/OrderPi
 COPY OrderPickingService/OrderPickingService.Infrastructure.Database/ OrderPickingService/OrderPickingService.Infrastructure.Database/
 COPY OrderPickingService/OrderPickingService.Services/ OrderPickingService/OrderPickingService.Services/
 COPY OrderPickingService/OrderPickingService.Services.Repositories.Abstractions/ OrderPickingService/OrderPickingService.Services.Repositories.Abstractions/
+COPY Common/ Common/
 COPY OrderPickingService/OrderPickingService.Infrastructure.ExternalServices/ OrderPickingService/OrderPickingService.Infrastructure.ExternalServices/
 RUN dotnet restore "OrderPickingService/OrderPickingService.Api/OrderPickingService.Api.csproj"
-COPY OrderPickingService/OrderPickingService.Api/ OrderPickingService/OrderPickingService.Api/
 WORKDIR "/src/OrderPickingService/OrderPickingService.Api"
 RUN dotnet build "OrderPickingService.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

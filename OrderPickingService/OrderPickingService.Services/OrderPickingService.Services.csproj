@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Common\Common.csproj" />
       <ProjectReference Include="..\OrderPickingService.Domain\OrderPickingService.Domain.csproj" />
       <ProjectReference Include="..\OrderPickingService.Services.Repositories.Abstractions\OrderPickingService.Services.Repositories.Abstractions.csproj" />
     </ItemGroup>

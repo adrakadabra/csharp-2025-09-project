@@ -17,6 +17,16 @@ internal sealed class OrderRepository(DatabaseContext databaseContext) : IOrderR
         return foundOrder?.ToOrder();
     }
 
+    public async Task<Order?> GetOrderByExternalId(Guid externalOrderId, CancellationToken cancellationToken = default)
+    {
+        var foundOrder = await databaseContext.Orders
+            .AsNoTracking()
+            .Include(o => o.OrderItems)
+            .FirstOrDefaultAsync(order => order.ExternalId == externalOrderId, cancellationToken);
+        
+        return foundOrder?.ToOrder();
+    }
+
     public async Task<Order> CreateAsync(Order create, CancellationToken cancellationToken = default)
     {
         var newOrder = create.ToOrderEntity();
