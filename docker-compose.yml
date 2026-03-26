@@ -66,6 +66,7 @@ services:
       RMQ_PORT: 5672
       RMQ_USER: guest
       RMQ_PASSWORD: guest
+      RMQ_PICKING_COMPLETED_QUEUE: picking-completed-queue
       RMQ_PRODUCT_FROM_STORAGE_QUEUE: storage-product-messages-queue
       ASPNETCORE_ENVIRONMENT: "Staging"
       ASPNETCORE_URLS: http://+:8080

@@ -2,6 +2,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using StorageService.Api.Application.Interfaces;
 using StorageService.Api.Application.Services;
+using StorageService.Api.Consumers;
 using StorageService.Api.Helpers;
 using StorageService.Api.Infrastructure.Data;
 using StorageService.Api.Infrastructure.Interfaces;
@@ -47,11 +48,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddMassTransit(x => {
+    x.AddConsumer<OrderCompleteConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
-        //x.AddConsumer<IConsumer>();
         RabbitConfigurator.ConfigureRmq(cfg, builder.Configuration);
-        //RabbitConfigurator.RegisterEndPoints(cfg, context);
+        RabbitConfigurator.RegisterEndPoints(cfg, context, builder.Configuration);
     });
 });
 

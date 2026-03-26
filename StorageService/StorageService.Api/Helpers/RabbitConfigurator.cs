@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using StorageService.Api.Configurations;
+using StorageService.Api.Consumers;
 
 namespace StorageService.Api.Helpers
 {
@@ -40,12 +41,12 @@ namespace StorageService.Api.Helpers
         /// </summary>
         /// <param name="configurator"></param>
         /// <param name="context"></param>
-        internal static void RegisterEndPoints(IRabbitMqBusFactoryConfigurator configurator, IBusRegistrationContext context)
+        internal static void RegisterEndPoints(IRabbitMqBusFactoryConfigurator configurator, IBusRegistrationContext context, IConfiguration configuration)
         {
-            // Example
-            configurator.ReceiveEndpoint($"queueName", e =>
+            var completedQueue = configuration["RMQ_PICKING_COMPLETED_QUEUE"] ?? "picking-completed-queue";
+            configurator.ReceiveEndpoint(completedQueue, e =>
             {
-                // e.ConfigureConsumer<IConsumer>(context);
+                e.ConfigureConsumer<OrderCompleteConsumer>(context);
                 e.UseMessageRetry(r =>
                 {
                     r.Incremental(3, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
