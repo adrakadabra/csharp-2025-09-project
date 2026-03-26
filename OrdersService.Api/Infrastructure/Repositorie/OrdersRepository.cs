@@ -20,6 +20,13 @@ public class OrdersRepository : IOrdersRepository
             .Include(x => x.Items)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
+    
+    public Task<Order?> GetByOrderNumberAsync(Guid orderNumber, CancellationToken cancellationToken = default)
+    {
+        return _dbContext.Orders
+            .Include(x => x.Items)
+            .FirstOrDefaultAsync(x => x.OrderNumber == orderNumber, cancellationToken);
+    }
 
     public Task<List<Order>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {

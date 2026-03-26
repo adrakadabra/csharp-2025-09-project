@@ -117,8 +117,8 @@ services:
   order-service:
     image: order-service
     build:
-      context: ./OrdersService.Api 
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: OrdersService.Api/Dockerfile
     ports:
       - "8083:8080"
     environment:
@@ -130,6 +130,7 @@ services:
       RMQ_PORT: 5672
       RMQ_USER: guest
       RMQ_PASSWORD: guest
+      RMQ_PICKING_COMPLETED_QUEUE: picking-completed-queue
       ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_URLS: http://+:8080
     depends_on:

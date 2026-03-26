@@ -5,4 +5,5 @@ namespace OrderPickingService.Services.Order.Abstractions;
 public interface IOrderService
 {
     Task<OrderDto> CreateOrderAsync(CreateOrderDto createOrderDto, CancellationToken cancellationToken = default);
+    Task<OrderDto> GetOrderByExternalId(Guid externalOrderId, CancellationToken cancellationToken = default);
 }

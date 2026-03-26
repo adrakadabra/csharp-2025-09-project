@@ -23,6 +23,12 @@ public interface IOrdersService
         DateTime? completedAt = null,
         CancellationToken cancellationToken = default);
 
+    Task<bool> SetStatusAsync(
+        Guid orderNumber,
+        OrderStatus newStatus,
+        DateTime? completedAt = null,
+        CancellationToken cancellationToken = default);
+
     Task<bool> CancelOrderAsync(
         int orderId,
         string userId,

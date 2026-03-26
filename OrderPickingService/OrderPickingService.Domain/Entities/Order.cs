@@ -10,6 +10,11 @@ public sealed class Order
 
     public string UserId { get; private set; } = null!;
     public List<OrderItem> Items { get; private set;  }
+        
+    public bool Contains(string sku)
+    {
+        return Items.Any(item => item.ProductSku == sku);
+    }
 
     public void ClaimOrder()
     {
