@@ -53,13 +53,14 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        var rabbitHost = builder.Configuration["Rabbit:Host"] ?? "localhost";
+        var rabbitHost = builder.Configuration["RMQ_HOST"] ?? "localhost";
         var rabbitVirtualHost = builder.Configuration["Rabbit:VirtualHost"] ?? "/";
-        var rabbitUser = builder.Configuration["Rabbit:User"] ?? "guest";
-        var rabbitPassword = builder.Configuration["Rabbit:Password"] ?? "guest";
-        var completedQueue = builder.Configuration["Rabbit:CompletedQueue"] ?? "orders-completed-queue";
+        var rabbitUser = builder.Configuration["RMQ_USER"] ?? "guest";
+        var rabbitPassword = builder.Configuration["RMQ_PASSWORD"] ?? "guest";
+        var rabbitPort = builder.Configuration.GetValue<ushort>("RMQ_PORT", 5672);
+        var completedQueue = builder.Configuration["RMQ_PICKING_COMPLETED_QUEUE"] ?? "picking-completed-queue";
 
-        cfg.Host(rabbitHost, rabbitVirtualHost, h =>
+        cfg.Host(rabbitHost, rabbitPort, rabbitVirtualHost, h =>
         {
             h.Username(rabbitUser);
             h.Password(rabbitPassword);

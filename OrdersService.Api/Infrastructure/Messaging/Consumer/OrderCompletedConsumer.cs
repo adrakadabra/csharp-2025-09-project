@@ -2,30 +2,36 @@
 using OrdersService.Api.Application.Interfaces;
 using OrdersService.Api.Domain.Enums;
 using OrdersService.Api.Infrastructure.Messaging.Messages;
+using Common.Messages.PickingCompleted;
 
 namespace OrdersService.Api.Infrastructure.Messaging.Consumers;
 
-public class OrderCompletedConsumer : IConsumer<OrderCompletedMessage>
+public class OrderCompletedConsumer : IConsumer<PickingCompletedMessage>
 {
     private readonly IOrdersService _ordersService;
-    private readonly ILogger<OrderCompletedConsumer> _logger;
+    private readonly ILogger<PickingCompletedMessage> _logger;
 
     public OrderCompletedConsumer(
         IOrdersService ordersService,
-        ILogger<OrderCompletedConsumer> logger)
+        ILogger<PickingCompletedMessage> logger)
     {
         _ordersService = ordersService;
         _logger = logger;
     }
 
-    public async Task Consume(ConsumeContext<OrderCompletedMessage> context)
+    public async Task Consume(ConsumeContext<PickingCompletedMessage> context)
     {
         var message = context.Message;
 
+        OrderStatus orderStatus = 
+            string.Equals(message.PickingStatus, "Completed", StringComparison.OrdinalIgnoreCase) 
+                ? OrderStatus.Completed
+                : OrderStatus.Cancelled;
+        
         var updated = await _ordersService.SetStatusAsync(
-            message.OrderId,
-            OrderStatus.Completed,
-            message.CompletedAt,
+            message.ExternalOrderId,
+            orderStatus,
+            message.FinishedAt,
             context.CancellationToken);
 
         if (!updated)
