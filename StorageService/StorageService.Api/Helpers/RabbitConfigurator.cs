@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using Common.Messages.PickingCompleted;
+using MassTransit;
 using StorageService.Api.Configurations;
 using StorageService.Api.Consumers;
 
@@ -41,11 +42,22 @@ namespace StorageService.Api.Helpers
         /// </summary>
         /// <param name="configurator"></param>
         /// <param name="context"></param>
-        internal static void RegisterEndPoints(IRabbitMqBusFactoryConfigurator configurator, IBusRegistrationContext context, IConfiguration configuration)
+        internal static void RegisterEndPoints(
+            IRabbitMqBusFactoryConfigurator configurator, 
+            IBusRegistrationContext context, 
+            IConfiguration configuration)
         {
-            var completedQueue = configuration["RMQ_PICKING_COMPLETED_QUEUE"] ?? "picking-completed-queue";
-            configurator.ReceiveEndpoint(completedQueue, e =>
+            var completedQueue = configuration["RMQ_PICKING_COMPLETED_QUEUE"] ?? "picking-completed-exchange";
+            var storageServiceQueue = configuration["RMQ_PICKING_COMPLETED_STORAGE_SERVICE_QUEUE"] ?? "storage-service-queue";
+            
+            configurator.Message<PickingCompletedMessage>(e =>
             {
+                e.SetEntityName(completedQueue);
+            });
+            
+            configurator.ReceiveEndpoint(storageServiceQueue, e =>
+            {
+                e.Bind(completedQueue);
                 e.ConfigureConsumer<OrderCompleteConsumer>(context);
                 e.UseMessageRetry(r =>
                 {

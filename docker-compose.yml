@@ -66,7 +66,8 @@ services:
       RMQ_PORT: 5672
       RMQ_USER: guest
       RMQ_PASSWORD: guest
-      RMQ_PICKING_COMPLETED_QUEUE: picking-completed-queue
+      RMQ_PICKING_COMPLETED_QUEUE: picking-completed-exchange
+      RMQ_PICKING_COMPLETED_STORAGE_SERVICE_QUEUE: storage-service-queue
       RMQ_PRODUCT_FROM_STORAGE_QUEUE: storage-product-messages-queue
       ASPNETCORE_ENVIRONMENT: "Staging"
       ASPNETCORE_URLS: http://+:8080
@@ -99,7 +100,7 @@ services:
       RMQ_PORT: 5672
       RMQ_USER: guest
       RMQ_PASSWORD: guest
-      RMQ_PICKING_COMPLETED_QUEUE: picking-completed-queue
+      RMQ_PICKING_COMPLETED_QUEUE: picking-completed-exchange
       STORAGE_SERVICE_URL: http://storage-service:8080
       ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_URLS: http://+:8080
@@ -131,7 +132,8 @@ services:
       RMQ_PORT: 5672
       RMQ_USER: guest
       RMQ_PASSWORD: guest
-      RMQ_PICKING_COMPLETED_QUEUE: picking-completed-queue
+      RMQ_PICKING_COMPLETED_QUEUE: picking-completed-exchange
+      RMQ_PICKING_COMPLETED_ORDER_SERVICE_QUEUE: order-service-queue
       ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_URLS: http://+:8080
     depends_on:

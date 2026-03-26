@@ -1,3 +1,4 @@
+using Common.Messages.PickingCompleted;
 using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -58,7 +59,8 @@ builder.Services.AddMassTransit(x =>
         var rabbitUser = builder.Configuration["RMQ_USER"] ?? "guest";
         var rabbitPassword = builder.Configuration["RMQ_PASSWORD"] ?? "guest";
         var rabbitPort = builder.Configuration.GetValue<ushort>("RMQ_PORT", 5672);
-        var completedQueue = builder.Configuration["RMQ_PICKING_COMPLETED_QUEUE"] ?? "picking-completed-queue";
+        var completedQueue = builder.Configuration["RMQ_PICKING_COMPLETED_QUEUE"] ?? "picking-completed-exchange";
+        var orderServiceQueue = builder.Configuration["RMQ_PICKING_COMPLETED_ORDER_SERVICE_QUEUE"] ?? "order-service-queue";
 
         cfg.Host(rabbitHost, rabbitPort, rabbitVirtualHost, h =>
         {
@@ -66,8 +68,14 @@ builder.Services.AddMassTransit(x =>
             h.Password(rabbitPassword);
         });
 
-        cfg.ReceiveEndpoint(completedQueue, e =>
+        cfg.Message<PickingCompletedMessage>(e =>
         {
+            e.SetEntityName(completedQueue);
+        });
+        
+        cfg.ReceiveEndpoint(orderServiceQueue, e =>
+        {
+            e.Bind(completedQueue);
             e.ConfigureConsumer<OrderCompletedConsumer>(context);
         });
     });

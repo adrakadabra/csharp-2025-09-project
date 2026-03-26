@@ -6,7 +6,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using OrderPickingService.Api.Services;
 using OrderPickingService.Infrastructure.Database;
+using OrderPickingService.Infrastructure.Database.Migrations;
 using OrderPickingService.Infrastructure.ExternalServices;
+using OrderPickingService.Infrastructure.Outbox;
 using OrderPickingService.Services;
 
 namespace OrderPickingService.Api;
@@ -67,7 +69,8 @@ public class Program
             .AddDomainServices()
             .AddStorageHttpClient(builder.Configuration)
             .AddValidatorsFromAssembly(typeof(Program).Assembly)
-            .AddRabbitMq(builder.Configuration);
+            .AddRabbitMq(builder.Configuration)
+            .AddOutbox()
             ;
         
         var app = builder.Build();

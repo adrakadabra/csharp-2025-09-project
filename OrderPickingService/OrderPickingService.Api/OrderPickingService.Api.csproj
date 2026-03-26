@@ -29,6 +29,7 @@
     <ItemGroup>
       <ProjectReference Include="..\OrderPickingService.Infrastructure.ExternalServices\OrderPickingService.Infrastructure.ExternalServices.csproj" />
       <ProjectReference Include="..\OrderPickingService.Infrastructure.Database\OrderPickingService.Infrastructure.Database.csproj" />
+      <ProjectReference Include="..\OrderPickingService.Infrastructure.Outbox\OrderPickingService.Infrastructure.Outbox.csproj" />
       <ProjectReference Include="..\OrderPickingService.Services\OrderPickingService.Services.csproj" />
     </ItemGroup>
 

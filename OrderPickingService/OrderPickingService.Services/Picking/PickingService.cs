@@ -1,3 +1,5 @@
+using System.Text.Json;
+using Common.Messages.PickingCompleted;
 using OrderPickingService.Domain.Entities;
 using OrderPickingService.Domain.Enums;
 using OrderPickingService.Domain.Events;
@@ -7,6 +9,8 @@ using OrderPickingService.Services.Order;
 using OrderPickingService.Services.Picking.Abstractions;
 using OrderPickingService.Services.Picking.Dtos;
 using OrderPickingService.Services.Repositories.Abstractions;
+using OrderPickingService.Services.Repositories.Abstractions.Dtos;
+using PickingResultItem = OrderPickingService.Domain.Events.PickingResultItem;
 
 namespace OrderPickingService.Services.Picking;
 
@@ -17,7 +21,7 @@ internal sealed class PickingService(
     IPickingProcessor pickingProcessor,
     IUnitOfWork unitOfWork,
     IStorageServiceClient storageServiceClient,
-    IMessagePublisher messagePublisher) : IPickingService
+    IOutboxRepository outboxRepository) : IPickingService
 {
     public async Task<CreatedPickingSessionDto> ClaimOrder(
         ClaimOrderDto claimOrderDto,
@@ -140,6 +144,9 @@ internal sealed class PickingService(
             await unitOfWork.BeginTransactionAsync(cancellationToken);
             await pickingSessionRepository.UpdateAsync(pickingSession, cancellationToken);
             await orderRepository.UpdateAsync(order, cancellationToken);
+            var pickingCompletedMessage = CreatePickingCompletedEvent(order, pickingSession).ToPickingCompletedMessage();
+            var pickingCompletedMessageJson = JsonSerializer.Serialize<PickingCompletedMessage>(pickingCompletedMessage);
+            await outboxRepository.AddAsync(new CreateOutboxMessageDto(OutboxEventTypes.PickingCompleted, pickingCompletedMessageJson), cancellationToken);
             await unitOfWork.CommitTransactionAsync(cancellationToken);
         }
         catch (Exception)
@@ -148,7 +155,12 @@ internal sealed class PickingService(
             throw;
         }
         
-        var pickingCompletedEvent = new PickingCompletedEvent(
+        return pickingSession.ToPickingSessionDto();
+    }
+
+    private PickingCompletedEvent CreatePickingCompletedEvent(Domain.Entities.Order order, PickingSession pickingSession)
+    {
+        return new PickingCompletedEvent(
             OrderId: order.Id,
             PickingId: pickingSession.Id,
             ExternalOrderId: order.ExternalId,
@@ -181,10 +193,6 @@ internal sealed class PickingService(
                     Notes: string.Join("; ", groupedResult.Select(gr => gr.Notes).Where(gr => !string.IsNullOrEmpty(gr)))
                 ))
                 .ToList()
-            );
-        
-        await messagePublisher.PublishAsync(pickingCompletedEvent.ToPickingCompletedMessage(), cancellationToken);
-        
-        return pickingSession.ToPickingSessionDto();
+        );
     }
 }
