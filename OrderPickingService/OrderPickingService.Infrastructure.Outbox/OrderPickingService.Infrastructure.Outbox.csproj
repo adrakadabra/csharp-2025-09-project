@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="14.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OrderPickingService.Services.Repositories.Abstractions\OrderPickingService.Services.Repositories.Abstractions.csproj" />
+      <ProjectReference Include="..\OrderPickingService.Services\OrderPickingService.Services.csproj" />
+    </ItemGroup>
+
+</Project>

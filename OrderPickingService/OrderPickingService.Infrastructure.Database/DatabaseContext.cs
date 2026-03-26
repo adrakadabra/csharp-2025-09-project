@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using OrderPickingService.Domain.Enums;
 using OrderPickingService.Infrastructure.Database.Entities;
+using OrderPickingService.Infrastructure.Database.Entities.Events;
 using OrderPickingService.Infrastructure.Database.Entities.Order;
 using OrderPickingService.Infrastructure.Database.Entities.Picker;
 using OrderPickingService.Infrastructure.Database.Entities.PickingSession;
@@ -21,6 +22,7 @@ public sealed class DatabaseContext : DbContext
     public DbSet<OrderItemEntity> OrderItems { get; set; }
     public DbSet<PickingSessionEntity> PickingSessions { get; set; }
     public DbSet<PickedItemEntity> PickedItems { get; set; }
+    public DbSet<OutboxMessageEntity> OutboxMessages { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -183,17 +185,36 @@ public sealed class DatabaseContext : DbContext
                 pickedItemEntity.HasIndex(pickedItem => pickedItem.OrderItemId);
             });
         
-            new DataSeeder().Seed(modelBuilder);
+        modelBuilder.Entity<OutboxMessageEntity>(
+            outboxMessages =>
+        {
+            outboxMessages.HasKey(outboxMessage => outboxMessage.Id);
+            
+            outboxMessages.Property(outboxMessage => outboxMessage.EventType)
+                .IsRequired()
+                .HasMaxLength(100);
+            
+            outboxMessages.Property(outboxMessage => outboxMessage.Message)
+                .IsRequired();
+            
+            outboxMessages.Property(outboxMessage => outboxMessage.ProcessedAt);
+            
+            outboxMessages.Property(outboxMessage => outboxMessage.Attempts)
+                .HasDefaultValue(0);
+        });
+        
+        
+        new DataSeeder().Seed(modelBuilder);
     }
 }
-//Сгенерировать миграцию (AddUserId - название миграции)
-//dotnet ef migrations add AddUserId --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+//Сгенерировать миграцию (AddOutboxMessages - название миграции)
+//dotnet ef migrations add AddOutboxMessages --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
 //Обновить БД
 //dotnet ef database update --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
-// Обновить БД до миграции (AddUserId - название миграции)
-// dotnet ef database update AddUserId --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
+// Обновить БД до миграции (AddOutboxMessages - название миграции)
+// dotnet ef database update AddOutboxMessages --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext
 
 //Удалить последнюю миграцию
 //dotnet ef migrations remove --startup-project ../OrderPickingService.Api --project ../OrderPickingService.Infrastructure.Database --context DatabaseContext

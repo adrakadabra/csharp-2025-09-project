@@ -29,9 +29,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontService", "FrontService\FrontService.csproj", "{BEE5106E-82AB-412D-A924-7652489BF1E6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderPickingService", "OrderPickingService", "{DDC02A0F-1DC1-411B-9907-D979739BC7D1}"
-	ProjectSection(SolutionItems) = preProject
-		OrderPickingService\dontPush.json = OrderPickingService\dontPush.json
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{D2A41D59-EE94-4C74-AD9C-12B0B3C1899A}"
 EndProject
@@ -67,6 +64,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Api", "OrderPickingService\OrderPickingService.Api\OrderPickingService.Api.csproj", "{1130978A-14B1-8A9B-DE7F-4AC817C75874}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Infrastructure.ExternalServices", "OrderPickingService\OrderPickingService.Infrastructure.ExternalServices\OrderPickingService.Infrastructure.ExternalServices.csproj", "{9A8C573D-95AC-4DD1-99CA-C4F0CCE6C27A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Infrastructure.Outbox", "OrderPickingService\OrderPickingService.Infrastructure.Outbox\OrderPickingService.Infrastructure.Outbox.csproj", "{090B4CED-63B4-4C01-A15D-507C3DF50285}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -134,6 +133,10 @@ Global
 		{9A8C573D-95AC-4DD1-99CA-C4F0CCE6C27A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A8C573D-95AC-4DD1-99CA-C4F0CCE6C27A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A8C573D-95AC-4DD1-99CA-C4F0CCE6C27A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{090B4CED-63B4-4C01-A15D-507C3DF50285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{090B4CED-63B4-4C01-A15D-507C3DF50285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{090B4CED-63B4-4C01-A15D-507C3DF50285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{090B4CED-63B4-4C01-A15D-507C3DF50285}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -159,6 +162,7 @@ Global
 		{5656600D-B07D-4ACD-BEB8-D73EBA9432A7} = {37663647-F265-4370-B9B9-C8055B70B8F8}
 		{1130978A-14B1-8A9B-DE7F-4AC817C75874} = {B75DE400-FD7B-4B4C-B2E5-B9D6F227C9D2}
 		{9A8C573D-95AC-4DD1-99CA-C4F0CCE6C27A} = {009EB492-CD41-4F6A-8123-4EE4E80C881D}
+		{090B4CED-63B4-4C01-A15D-507C3DF50285} = {009EB492-CD41-4F6A-8123-4EE4E80C881D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4BD570C6-AF3C-4DA7-BD96-A7122C11F394}

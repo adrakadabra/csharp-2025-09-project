@@ -34,6 +34,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IOrderRepository, OrderRepository>()
             .AddScoped<IPickingSessionRepository, PickingSessionRepository>()
             .AddScoped<IUnitOfWork, UnitOfWork>()
+            .AddScoped<IOutboxRepository, OutboxRepository>()
             ;
         
         return services;

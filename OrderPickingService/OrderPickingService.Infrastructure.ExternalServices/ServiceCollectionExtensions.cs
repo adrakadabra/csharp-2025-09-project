@@ -1,3 +1,4 @@
+using Common.Messages.PickingCompleted;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MassTransit;
@@ -31,7 +32,7 @@ public static  class ServiceCollectionExtensions
             {
                 var host = configuration["RMQ_HOST"] ?? "rabbitmq";
                 var port = configuration.GetValue<ushort>("RMQ_PORT", 5672);
-                var queueName = configuration["RMQ_PICKING_COMPLETED_QUEUE"] ?? "picking-completed-queue";
+                var exchangeName = configuration["RMQ_PICKING_COMPLETED_QUEUE"] ?? "picking-completed-exchange";
 
                 cfg
                     .Host(host, port, "/", h =>
@@ -40,12 +41,15 @@ public static  class ServiceCollectionExtensions
                         h.Password(configuration["RMQ_PASSWORD"] ?? "guest");
                     });
                 
-                cfg.Message<PickingCompletedEvent>(e =>
+                cfg.Message<PickingCompletedMessage>(e =>
                 {
-                    e.SetEntityName(queueName);
+                    e.SetEntityName(exchangeName);
                 });
                 
-                cfg.ReceiveEndpoint(queueName, e => { });
+                cfg.Publish<PickingCompletedMessage>(e =>
+                {
+                    e.ExchangeType = "fanout";
+                });
             });
         });
 
