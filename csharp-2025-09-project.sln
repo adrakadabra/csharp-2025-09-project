@@ -67,6 +67,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Infrast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderPickingService.Infrastructure.Outbox", "OrderPickingService\OrderPickingService.Infrastructure.Outbox\OrderPickingService.Infrastructure.Outbox.csproj", "{090B4CED-63B4-4C01-A15D-507C3DF50285}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShiftService", "ShiftService", "{832A1F65-C376-4DE3-9D93-02270118EC2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftService.Api", "ShiftService\ShiftService.Api\ShiftService.Api.csproj", "{7EAF152A-8CE3-9DD6-5A59-0AEB5CA2851F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftService.Domain", "ShiftService\ShiftService.Domain\ShiftService.Domain.csproj", "{002398F8-6EF5-7790-2096-8B61D4DC6EDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftService.Application", "ShiftService\ShiftService.Application\ShiftService.Application.csproj", "{979E423A-5AB2-CAA8-052F-8FC60BC3FAF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftService.Infrastructure", "ShiftService\ShiftService.Infrastructure\ShiftService.Infrastructure.csproj", "{3DB9B7EE-0E88-E5D0-8387-829F6469BA58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftService.Kiosk", "ShiftService.Kiosk\ShiftService.Kiosk.csproj", "{E19EBE5E-B24F-BDFF-C559-6C2FF2B53A22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +149,26 @@ Global
 		{090B4CED-63B4-4C01-A15D-507C3DF50285}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{090B4CED-63B4-4C01-A15D-507C3DF50285}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{090B4CED-63B4-4C01-A15D-507C3DF50285}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EAF152A-8CE3-9DD6-5A59-0AEB5CA2851F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EAF152A-8CE3-9DD6-5A59-0AEB5CA2851F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EAF152A-8CE3-9DD6-5A59-0AEB5CA2851F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EAF152A-8CE3-9DD6-5A59-0AEB5CA2851F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{002398F8-6EF5-7790-2096-8B61D4DC6EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002398F8-6EF5-7790-2096-8B61D4DC6EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002398F8-6EF5-7790-2096-8B61D4DC6EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002398F8-6EF5-7790-2096-8B61D4DC6EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{979E423A-5AB2-CAA8-052F-8FC60BC3FAF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{979E423A-5AB2-CAA8-052F-8FC60BC3FAF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{979E423A-5AB2-CAA8-052F-8FC60BC3FAF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{979E423A-5AB2-CAA8-052F-8FC60BC3FAF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DB9B7EE-0E88-E5D0-8387-829F6469BA58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DB9B7EE-0E88-E5D0-8387-829F6469BA58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DB9B7EE-0E88-E5D0-8387-829F6469BA58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DB9B7EE-0E88-E5D0-8387-829F6469BA58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E19EBE5E-B24F-BDFF-C559-6C2FF2B53A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E19EBE5E-B24F-BDFF-C559-6C2FF2B53A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E19EBE5E-B24F-BDFF-C559-6C2FF2B53A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E19EBE5E-B24F-BDFF-C559-6C2FF2B53A22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +195,11 @@ Global
 		{1130978A-14B1-8A9B-DE7F-4AC817C75874} = {B75DE400-FD7B-4B4C-B2E5-B9D6F227C9D2}
 		{9A8C573D-95AC-4DD1-99CA-C4F0CCE6C27A} = {009EB492-CD41-4F6A-8123-4EE4E80C881D}
 		{090B4CED-63B4-4C01-A15D-507C3DF50285} = {009EB492-CD41-4F6A-8123-4EE4E80C881D}
+		{7EAF152A-8CE3-9DD6-5A59-0AEB5CA2851F} = {832A1F65-C376-4DE3-9D93-02270118EC2C}
+		{002398F8-6EF5-7790-2096-8B61D4DC6EDE} = {832A1F65-C376-4DE3-9D93-02270118EC2C}
+		{979E423A-5AB2-CAA8-052F-8FC60BC3FAF0} = {832A1F65-C376-4DE3-9D93-02270118EC2C}
+		{3DB9B7EE-0E88-E5D0-8387-829F6469BA58} = {832A1F65-C376-4DE3-9D93-02270118EC2C}
+		{E19EBE5E-B24F-BDFF-C559-6C2FF2B53A22} = {832A1F65-C376-4DE3-9D93-02270118EC2C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4BD570C6-AF3C-4DA7-BD96-A7122C11F394}
