@@ -18,7 +18,7 @@ services:
     image: postgres:latest
     environment:
       POSTGRES_PASSWORD: P@ssw0rd
-      POSTGRES_MULTIPLE_DATABASES: UsersDb,StorageDb,OrderPickingDb,OrdersDb
+      POSTGRES_MULTIPLE_DATABASES: UsersDb,StorageDb,OrderPickingDb,OrdersDb,ShiftDb
     ports:
       - "5433:5432"
     networks:
@@ -144,6 +144,39 @@ services:
     networks:
       - shop-network
       - shop-pg-network
+    restart: unless-stopped
+  
+  shift-service:
+    image: shift-service
+    build:
+      context: .
+      dockerfile: ShiftService/ShiftService.Api/Dockerfile
+    ports:
+      - "8084:8080"
+    environment:
+      ConnectionStrings__ShiftDb: Host=postgres;Port=5432;Database=ShiftDb;Username=postgres;Password=P@ssw0rd
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - shop-network
+      - shop-pg-network
+    restart: unless-stopped
+  
+  shift-kiosk:
+    build:
+      context: .
+      dockerfile: ShiftService.Kiosk/Dockerfile
+    ports:
+        - "8085:80"
+    environment:
+       API_BASE_URL: http://shift-service:8080
+    depends_on:
+      shift-service:
+       condition: service_healthy
+    networks:
+      - shop-network
     restart: unless-stopped
 
 networks:
