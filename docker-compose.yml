@@ -171,10 +171,7 @@ services:
     ports:
         - "8085:80"
     environment:
-       API_BASE_URL: http://shift-service:8080
-    depends_on:
-      shift-service:
-       condition: service_healthy
+       API_BASE_URL: http://shift-service:8080 
     networks:
       - shop-network
     restart: unless-stopped
