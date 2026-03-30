@@ -8,7 +8,9 @@ namespace OrderPickingService.Api.Controllers.PickingSession;
 
 [ApiController]
 [Route("api/[controller]")]
-public sealed class PickingSessionController(IPickingService pickingService) : ControllerBase
+public sealed class PickingSessionController(
+    IPickingService pickingService,
+    ILogger<PickingSessionController> logger) : ControllerBase
 {
     [HttpPost("ClaimOrder")]
     [ProducesResponseType(typeof(CreatedPickingSessionDto),StatusCodes.Status201Created)]
@@ -33,7 +35,7 @@ public sealed class PickingSessionController(IPickingService pickingService) : C
         }
         catch (Exception e)
         {
-            Console.WriteLine(e); //TODO: add logging
+            logger.LogError(e, e.Message);
             return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
@@ -66,7 +68,7 @@ public sealed class PickingSessionController(IPickingService pickingService) : C
         }
         catch (Exception e)
         {
-            Console.WriteLine(e); //TODO: add logging
+            logger.LogError(e, e.Message);
             return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
@@ -103,7 +105,7 @@ public sealed class PickingSessionController(IPickingService pickingService) : C
         }
         catch (Exception e)
         {
-            Console.WriteLine(e); //TODO: add logging
+            logger.LogError(e, e.Message);
             return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

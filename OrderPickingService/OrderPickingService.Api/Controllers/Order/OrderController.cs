@@ -8,7 +8,9 @@ namespace OrderPickingService.Api.Controllers.Order;
 
 [ApiController]
 [Route("api/[controller]")]
-public sealed class OrderController(IOrderService orderService) : ControllerBase
+public sealed class OrderController(
+    IOrderService orderService,
+    ILogger<OrderController> logger) : ControllerBase
 {
     [HttpPost("CreateOrder")]
     [ProducesResponseType(typeof(CreateOrderDto),StatusCodes.Status201Created)]
@@ -33,7 +35,7 @@ public sealed class OrderController(IOrderService orderService) : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e); //TODO: add logging
+            logger.LogError(e, "Error creating order");
             return StatusCode(StatusCodes.Status400BadRequest, e.Message);
         }
     }
@@ -53,7 +55,7 @@ public sealed class OrderController(IOrderService orderService) : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e); //TODO: add logging
+            logger.LogWarning(e,  "Order not found");
             return StatusCode(StatusCodes.Status400BadRequest, e.Message);
         }
     }

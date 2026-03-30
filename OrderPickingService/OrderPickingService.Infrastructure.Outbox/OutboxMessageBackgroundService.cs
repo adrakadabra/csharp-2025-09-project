@@ -10,7 +10,7 @@ internal sealed class OutboxMessageBackgroundService(
     IServiceScopeFactory scopeFactory,
     ILogger<OutboxMessageBackgroundService> logger) : BackgroundService
 {
-    private readonly TimeSpan _interval = TimeSpan.FromMicroseconds(100);
+    private readonly TimeSpan _interval = TimeSpan.FromSeconds(1);
     private readonly int _batchSize = 100;
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,25 +34,37 @@ internal sealed class OutboxMessageBackgroundService(
     {
         using var scope = scopeFactory.CreateScope();
         var outboxRepository = scope.ServiceProvider.GetRequiredService<IOutboxRepository>();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
         var mapper = scope.ServiceProvider.GetRequiredService<IOutboxMessageMapper>();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         var messages = await outboxRepository.GetUnprocessedAsync(
             limit: _batchSize,
             cancellationToken: cancellationToken);
-
+        
         foreach (var message in messages)
         {
-            var request = mapper.Map(message);
-            var result = await mediator.Send(request, cancellationToken);
-            
-            if(result.Success)
+            await unitOfWork.BeginTransactionAsync(cancellationToken);
+
+            try
             {
-                await outboxRepository.DeleteProcessedAsync(message.Id, cancellationToken);
+                var request = mapper.Map(message);
+                var result = await mediator.Send(request, cancellationToken);
+
+                if (result.Success)
+                {
+                    await outboxRepository.DeleteProcessedAsync(message.Id, cancellationToken);
+                }
+                else
+                {
+                    await outboxRepository.IncrementAttemptsAsync(message.Id, cancellationToken);
+                }
+                await unitOfWork.CommitTransactionAsync(cancellationToken);
             }
-            else
+            catch (Exception e)
             {
-                await outboxRepository.IncrementAttemptsAsync(message.Id, cancellationToken);
+                await unitOfWork.RollbackTransactionAsync(cancellationToken);
+                logger.LogError(e, $"Error processing outbox message {message.Id}");
             }
         }
     }
