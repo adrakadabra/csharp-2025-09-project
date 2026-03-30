@@ -5,7 +5,7 @@ namespace OrderPickingService.Infrastructure.Outbox;
 
 public class OutboxMessageMapper : IOutboxMessageMapper
 {
-    private readonly Dictionary<string,IConcreteOutboxMessageMapper> _mappersByType;
+    private readonly Dictionary<string, IConcreteOutboxMessageMapper> _mappersByType;
 
     public OutboxMessageMapper(IEnumerable<IConcreteOutboxMessageMapper> mappers)
     {

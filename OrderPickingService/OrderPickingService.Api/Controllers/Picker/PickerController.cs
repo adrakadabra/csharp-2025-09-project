@@ -8,7 +8,9 @@ namespace OrderPickingService.Api.Controllers.Picker;
 
 [ApiController]
 [Route("api/[controller]")]
-public sealed class PickerController(IPickerService pickerService) : ControllerBase
+public sealed class PickerController(
+    IPickerService pickerService,
+    ILogger<PickerController> logger) : ControllerBase
 {
         
     [HttpGet("GetPickers")]
@@ -65,7 +67,7 @@ public sealed class PickerController(IPickerService pickerService) : ControllerB
         }
         catch (Exception e)
         {
-            Console.WriteLine(e); //TODO: add logging
+            logger.LogError(e, e.Message);
             return StatusCode(StatusCodes.Status400BadRequest, e.Message);
         }
     }
@@ -93,7 +95,7 @@ public sealed class PickerController(IPickerService pickerService) : ControllerB
         }
         catch (Exception e)
         {
-            Console.WriteLine(e); //TODO: add logging
+            logger.LogError(e, e.Message);
             return StatusCode(StatusCodes.Status400BadRequest, e.Message);
         }
     }
